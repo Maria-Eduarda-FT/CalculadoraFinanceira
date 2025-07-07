@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financeira</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'><path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'/></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 40px);
+        }
+
+        .calculator-section {
+            flex: 1;
+            min-width: 600px;
+            display: flex;
+            flex-direction: row;  
+            gap: 20px;
+        }
+
+        .formula-section {
+            width: 400px;  
+            min-width: 400px;  
+        }
+
+        .keypad-container { 
+            height: 33vw;  
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+            order: 1;  
+        }
+
+        .calculator-container {
+            height: 60vw;
+            flex: 1; 
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+            order: 2;  
+        }
+
+        .formula-sheet {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            height: 100%;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .calculation-mode {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mode-title {
+            font-size: 1.1rem;
+            color: #4facfe;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .mode-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .mode-btn {
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-color: #4facfe;
+        }
+
+        .instruction-box {
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .instruction-box p {
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        .instruction-box .highlight {
+            color: #4facfe;
+            font-weight: 600;
+        }
+
+        .inputs-section {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 2px rgba(79, 172, 254, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: #a0a0a0;
+        }
+
+        .input-field.empty-for-calculation {
+            background: rgba(255, 193, 7, 0.2);
+            border-color: rgba(255, 193, 7, 0.5);
+        }
+
+        .input-field.empty-for-calculation::placeholder {
+            color: #ffeb3b;
+        }
+
+        .input-with-button {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-converter {
+            padding: 0 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(79, 172, 254, 0.3);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-converter:hover {
+            background: rgba(79, 172, 254, 0.5);
+        }
+
+        .result-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-label {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            margin-bottom: 12px;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 300;
+            color: #4facfe;
+            text-align: right;
+            min-height: 48px;
+            line-height: 48px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-calculate {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+        }
+
+        .btn-calculate:hover {
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: linear-gradient(135deg, #ef5350 0%, #f44336 100%);
+        }
+
+        .keypad-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .keypad-header h3 {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+
+        .keypad-header p {
+            color: #a0a0a0;
+            font-size: 0.8rem;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .key {
+            height: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .key:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .key:active {
+            transform: translateY(0);
+        }
+
+        .key.operator {
+            background: rgba(79, 172, 254, 0.3);
+        }
+
+        .key.operator:hover {
+            background: rgba(79, 172, 254, 0.5);
+        }
+
+        .key.clear {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        .key.clear:hover {
+            background: rgba(244, 67, 54, 0.5);
+        }
+
+        .key.backspace {
+            background: rgba(255, 193, 7, 0.3);
+        }
+
+        .key.backspace:hover {
+            background: rgba(255, 193, 7, 0.5);
+        }
+
+        .active-input-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .active-input-display span {
+            color: #4facfe;
+            font-size: 0.9rem;
+        }
+
+        .active-input-display div {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        .formula-content {
+            padding: 30px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .formula-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .formula-header h2 {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .formula-header p {
+            color: #a0a0a0;
+            font-size: 0.8rem;
+        }
+
+        .formula-section-content {
+            margin-bottom: 30px;
+        }
+
+        .formula-section-content h3 {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(79, 172, 254, 0.3);
+            padding-bottom: 8px;
+        }
+
+        .formula-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .formula-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .formula-title {
+            color: #4facfe;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .formula-equation {
+            font-family: 'Courier New', monospace;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .formula-description {
+            color: #a0a0a0;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .formula-variable {
+            color: #f093fb;
+            font-weight: 500;
+        }
+
+        .formula-note {
+            background: rgba(79, 172, 254, 0.1);
+            border-left: 3px solid #4facfe;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .formula-note p {
+            color: #e0e0e0;
+            font-size: 0.8rem;
+            margin: 8px 0;
+        }
+
+        .examples-table {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .examples-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .examples-table th,
+        .examples-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .examples-table th {
+            background: rgba(79, 172, 254, 0.2);
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .examples-table td {
+            color: #e0e0e0;
+            font-size: 0.8rem;
+        }
+
+        .formula-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .formula-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .formula-content::-webkit-scrollbar-thumb {
+            background: rgba(79, 172, 254, 0.5);
+            border-radius: 4px;
+        }
+
+        .formula-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(79, 172, 254, 0.7);
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .calculator-section {
+                flex-direction: column; 
+            }
+            
+            .keypad-container,
+            .calculator-container,
+            .formula-section {
+                width: auto;  
+            }
+
+            .calculator-container {
+                padding: 24px;
+            }
+
+            .keypad-container {
+                padding: 20px;
+            }
+
+            .formula-sheet {
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 10px;
+            }
+
+            .calculator-container {
+                padding: 20px;
+            }
+
+            .keypad-container {
+                padding: 15px;
+            }
+
+            .input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .mode-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .keypad {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Seção da Calculadora -->
+        <div class="calculator-section">
+            <!--<div class="keypad-container">
+                <div class="keypad-header">
+                    <h3>Teclado Numérico</h3>
+                    <p>Clique nos campos para ativar a entrada</p>
+                </div>
+                
+                <div class="active-input-display">
+                    <span>Campo ativo:</span>
+                    <div id="active-input-name">Nenhum campo selecionado</div>
+                </div>
+
+                <div class="keypad">
+                    <div class="key clear" onclick="clearInput()">C</div>
+                    <div class="key backspace" onclick="backspace()">⌫</div>
+                    <div class="key operator" onclick="insertValue('.')">.</div>
+                    <div class="key operator" onclick="insertValue('/')">/</div>
+                    
+                    <div class="key" onclick="insertValue('7')">7</div>
+                    <div class="key" onclick="insertValue('8')">8</div>
+                    <div class="key" onclick="insertValue('9')">9</div>
+                    <div class="key operator" onclick="insertValue('*')">×</div>
+                    
+                    <div class="key" onclick="insertValue('4')">4</div>
+                    <div class="key" onclick="insertValue('5')">5</div>
+                    <div class="key" onclick="insertValue('6')">6</div>
+                    <div class="key operator" onclick="insertValue('-')">-</div>
+                    
+                    <div class="key" onclick="insertValue('1')">1</div>
+                    <div class="key" onclick="insertValue('2')">2</div>
+                    <div class="key" onclick="insertValue('3')">3</div>
+                    <div class="key operator" onclick="insertValue('+')">+</div>
+                    
+                    <div class="key" onclick="insertValue('0')" style="grid-column: span 2;">0</div>
+                    <div class="key operator" onclick="calculate()">=</div>
+                    <div class="key operator" onclick="insertValue('%')">%</div>
+                </div>
+            </div>-->
+
+            <div class="calculator-container">
+                <div class="header">
+                    <h1>Calculadora Financeira</h1>
+                    <p>Juros • Descontos • Cálculos financeiros</p>
+                </div>
+
+                <div class="calculation-mode">
+                    <div class="mode-title">Tipo de Cálculo:</div>
+                    <div class="mode-selector">
+                        <div class="mode-btn type-btn active" onclick="setCalculationType('compostos')">Juros Compostos</div>
+                        <div class="mode-btn type-btn" onclick="setCalculationType('simples')">Juros Simples</div>
+                        <div class="mode-btn type-btn" onclick="setCalculationType('racional')">Desconto Racional</div>
+                        <div class="mode-btn type-btn" onclick="setCalculationType('comercial')">Desconto Comercial</div>
+                    </div>
+                </div>
+
+                <!-- Inputs dinâmicos -->
+                <div id="input-container">
+                    <!-- Os campos serão inseridos dinamicamente aqui -->
+                </div>
+
+                <div class="result-section">
+                    <div class="result-label" id="result-label">Resultado:</div>
+                    <div class="result-value" id="result-value">0,00</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-calculate" onclick="calculate()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6 9 17l-5-5"/>
+                        </svg>
+                        Calcular
+                    </button>
+                    <button class="btn btn-clear" onclick="clearAll()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18l-1.5 14.5H4.5L3 6z"/>
+                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                        Limpar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção das Fórmulas -->
+        <div class="formula-section">
+            <div class="formula-sheet">
+                <div class="formula-content">
+                    <div class="formula-header">
+                        <h2>Fórmulas & Exemplos</h2>
+                        <p>Matemática Financeira</p>
+                    </div>
+
+                    <div class="formula-section-content">
+                        <h3>Fórmulas de Juros Compostos</h3>
+                        
+                        <div class="formula-item">
+                            <div class="formula-title">Valor Futuro (Montante)</div>
+                            <div class="formula-equation">VF = VP × (1 + i)ⁿ</div>
+                            <div class="formula-description">
+                                Calcula o valor futuro de um investimento com juros compostos
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Valor Presente (Capital)</div>
+                            <div class="formula-equation">VP = VF ÷ (1 + i)ⁿ</div>
+                            <div class="formula-description">
+                                Calcula o valor presente de um montante futuro
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Taxa de Juros</div>
+                            <div class="formula-equation">i = (VF ÷ VP)^(1/n) - 1</div>
+                            <div class="formula-description">
+                                Determina a taxa de juros necessária para atingir o objetivo
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Número de Períodos</div>
+                            <div class="formula-equation">n = ln(VF ÷ VP) ÷ ln(1 + i)</div>
+                            <div class="formula-description">
+                                Calcula o tempo necessário para atingir o valor futuro
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="formula-section-content">
+                        <h3>Fórmulas de Juros Simples</h3>
+                        
+                        <div class="formula-item">
+                            <div class="formula-title">Montante Simples</div>
+                            <div class="formula-equation">M = C × (1 + i × n)</div>
+                            <div class="formula-description">
+                                Calcula o montante em juros simples
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Juros Simples</div>
+                            <div class="formula-equation">J = C × i × n</div>
+                            <div class="formula-description">
+                                Calcula os juros em regime simples
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="formula-section-content">
+                        <h3>Fórmulas de Desconto</h3>
+                        
+                        <div class="formula-item">
+                            <div class="formula-title">Desconto Racional</div>
+                            <div class="formula-equation">N = A × (1 + i × n)</div>
+                            <div class="formula-description">
+                                Valor nominal baseado no valor atual
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Desconto Comercial</div>
+                            <div class="formula-equation">A = N × (1 - i × n)</div>
+                            <div class="formula-description">
+                                Valor atual baseado no valor nominal
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="formula-note">
+                        <p><strong>Legenda das Variáveis:</strong></p>
+                        <p><span class="formula-variable">VP/C/A</span> = Valor Presente/Capital/Atual</p>
+                        <p><span class="formula-variable">VF/M/N</span> = Valor Futuro/Montante/Nominal</p>
+                        <p><span class="formula-variable">i</span> = Taxa de juros (em decimal)</p>
+                        <p><span class="formula-variable">n</span> = Número de períodos</p>
+                        <p><span class="formula-variable">J</span> = Juros</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script> 
+// Variáveis globais
+let currentType = 'compostos';
+let activeInput = null;
+let activeInputName = 'Nenhum campo selecionado';
+
+// Modificação na configuração dos campos
+const fieldConfigurations = {
+    'compostos': [
+        { id: 'vp-input', label: 'Valor Presente (VP)', type: 'number', placeholder: 'Valor Presente (VP)' },
+        { id: 'vf-input', label: 'Valor Futuro (VF)', type: 'number', placeholder: 'Valor Futuro (VF)' },
+        { id: 'i-input', label: 'Taxa de Juros (%)', type: 'number', placeholder: 'Taxa de Juros (%)', hasButton: true, buttonText: 'Taxa Efetiva' },
+        { id: 'n-input', label: 'Períodos (n)', type: 'number', placeholder: 'Períodos (n)' }
+    ],
+    'simples': [
+    { id: 'vp-input', label: 'Valor Presente (VP)', type: 'number', placeholder: 'Valor Presente (VP)' },
+    { id: 'vf-input', label: 'Valor Futuro (VF)', type: 'number', placeholder: 'Valor Futuro (VF)' },
+    { id: 'j-input', label: 'Juros (J)', type: 'number', placeholder: 'Juros (J)' },
+    { id: 'i-input', label: 'Taxa de Juros (%)', type: 'number', placeholder: 'Taxa de Juros (%)' },
+    { id: 'n-input', label: 'Períodos (n)', type: 'number', placeholder: 'Períodos (n)' }
+],
+    'racional': [
+        { id: 'vp-input', label: 'Valor Atual (A)', type: 'number', placeholder: 'Valor Atual (A)' },
+        { id: 'vf-input', label: 'Valor Nominal (N)', type: 'number', placeholder: 'Valor Nominal (N)' },
+        { id: 'i-input', label: 'Taxa de Desconto (%)', type: 'number', placeholder: 'Taxa de Desconto (%)', hasButton: true, buttonText: 'Taxa Efetiva' },
+        { id: 'n-input', label: 'Períodos (n)', type: 'number', placeholder: 'Períodos (n)' }
+    ],
+    'comercial': [
+        { id: 'vp-input', label: 'Valor Atual (A)', type: 'number', placeholder: 'Valor Atual (A)' },
+        { id: 'vf-input', label: 'Valor Nominal (N)', type: 'number', placeholder: 'Valor Nominal (N)' },
+        { id: 'i-input', label: 'Taxa de Desconto (%)', type: 'number', placeholder: 'Taxa de Desconto (%)', hasButton: true, buttonText: 'Taxa Efetiva' },
+        { id: 'n-input', label: 'Períodos (n)', type: 'number', placeholder: 'Períodos (n)' }
+    ]
+};
+
+// Função para definir tipo de cálculo
+function setCalculationType(type) {
+    currentType = type;
+    
+    // Atualizar botões de tipo
+    document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Regenerar campos
+    generateInputFields();
+    updateResultLabel();
+}
+
+// Função para gerar campos de entrada
+function generateInputFields() {
+    const container = document.getElementById('input-container');
+    const fields = fieldConfigurations[currentType];
+    
+    container.innerHTML = '';
+    
+    fields.forEach(field => {
+        const inputGroup = document.createElement('div');
+        inputGroup.className = 'input-group';
+        
+        const label = document.createElement('label');
+        label.htmlFor = field.id;
+        label.textContent = field.label;
+        label.style.display = 'block';
+        label.style.marginBottom = '5px';
+        label.style.color = '#ffffff';
+        
+        inputGroup.appendChild(label);
+
+        if (field.hasButton) {
+            const inputWithButton = document.createElement('div');
+            inputWithButton.className = 'input-with-button';
+            
+            const input = document.createElement('input');
+            input.type = field.type;
+            input.id = field.id;
+            input.className = 'input-field';
+            input.placeholder = field.placeholder;
+            input.step = 'any';
+            input.addEventListener('focus', () => setActiveInput(input, field.label));
+            input.addEventListener('input', formatInput);
+            
+            const button = document.createElement('button');
+            button.className = 'btn-converter';
+            button.textContent = field.buttonText;
+            button.onclick = () => convertEffectiveRate(input);
+            
+            inputWithButton.appendChild(input);
+            inputWithButton.appendChild(button);
+            inputGroup.appendChild(inputWithButton);
+        } else {
+            const input = document.createElement('input');
+            input.type = field.type;
+            input.id = field.id;
+            input.className = 'input-field';
+            input.placeholder = field.placeholder;
+            input.step = 'any';
+            input.addEventListener('focus', () => setActiveInput(input, field.label));
+            input.addEventListener('input', formatInput);
+            
+            inputGroup.appendChild(input);
+        }
+        
+        container.appendChild(inputGroup);
+    });
+}
+
+// Função para definir campo ativo
+function setActiveInput(input, label) {
+    activeInput = input;
+    activeInputName = label;
+    document.getElementById('active-input-name').textContent = activeInputName;
+}
+
+// Função para formatar entrada
+function formatInput(event) {
+    const input = event.target;
+    let value = input.value;
+    
+    // Remove caracteres não numéricos exceto ponto e vírgula
+    value = value.replace(/[^0-9.,-]/g, '');
+    
+    // Substitui vírgula por ponto
+    value = value.replace(',', '.');
+    
+    input.value = value;
+}
+
+// Função para converter taxa efetiva
+function convertEffectiveRate(input) {
+    const value = parseFloat(input.value);
+    if (isNaN(value)) {
+        alert('Por favor, insira um valor válido.');
+        return;
+    }
+    
+    // Converter taxa anual para mensal (exemplo)
+    const monthlyRate = Math.pow(1 + (value / 100), 1/12) - 1;
+    const result = confirm(`Taxa anual: ${value}%\nTaxa mensal equivalente: ${(monthlyRate * 100).toFixed(4)}%\n\nDeseja usar a taxa mensal?`);
+    
+    if (result) {
+        input.value = (monthlyRate * 100).toFixed(4);
+    }
+}
+
+// Função para inserir valor no campo ativo
+function insertValue(value) {
+    if (!activeInput) {
+        alert('Selecione um campo primeiro.');
+        return;
+    }
+    
+    if (value === '=') {
+        calculate();
+        return;
+    }
+    
+    const currentValue = activeInput.value;
+    
+    if (['+', '-', '*', '/', '%'].includes(value)) {
+        // Operadores matemáticos
+        if (currentValue && !isNaN(parseFloat(currentValue))) {
+            try {
+                const result = eval(currentValue);
+                activeInput.value = result.toString();
+            } catch (error) {
+                activeInput.value = currentValue + value;
+            }
+        }
+    } else {
+        // Números e ponto decimal
+        activeInput.value = currentValue + value;
+    }
+}
+
+// Função para limpar campo ativo
+function clearInput() {
+    if (activeInput) {
+        activeInput.value = '';
+    }
+}
+
+// Função para backspace
+function backspace() {
+    if (activeInput) {
+        activeInput.value = activeInput.value.slice(0, -1);
+    }
+}
+
+// Função para atualizar label do resultado
+function updateResultLabel() {
+    const labels = {
+        'compostos': 'Resultado:',
+        'simples': 'Resultado:',
+        'racional': 'Resultado:',
+        'comercial': 'Resultado:'
+    };
+    
+    document.getElementById('result-label').textContent = labels[currentType];
+}
+
+// Função principal de cálculo
+function calculate() {
+    // Determinar qual campo está vazio (o que será calculado)
+    const fields = fieldConfigurations[currentType];
+    let emptyField = null;
+    let result = 0;
+    
+    for (const field of fields) {
+        const input = document.getElementById(field.id);
+        if (!input.value.trim()) {
+            emptyField = field.id;
+            break;
+        }
+    }
+    
+    if (!emptyField) {
+        alert('Todos os campos estão preenchidos. Deixe um campo vazio para calcular.');
+        return;
+    }
+    
+    try {
+        switch (currentType) {
+            case 'compostos':
+                result = calculateCompoundInterest(emptyField);
+                break;
+            case 'simples':
+                result = calculateSimpleInterest(emptyField);
+                break;
+            case 'racional':
+                result = calculateRationalDiscount(emptyField);
+                break;
+            case 'comercial':
+                result = calculateCommercialDiscount(emptyField);
+                break;
+        }
+        
+        // Formatar resultado
+        const formattedResult = formatCurrency(result, emptyField);
+        document.getElementById('result-value').textContent = formattedResult;
+        
+    } catch (error) {
+        alert('Erro no cálculo: ' + error.message);
+        document.getElementById('result-value').textContent = 'Erro';
+    }
+}
+
+// Função para calcular juros compostos  
+function calculateCompoundInterest(emptyField) {
+    const vp = parseFloat(document.getElementById('vp-input')?.value) || 0;
+    const vf = parseFloat(document.getElementById('vf-input')?.value) || 0;
+    const i = parseFloat(document.getElementById('i-input')?.value) || 0;
+    const n = parseFloat(document.getElementById('n-input')?.value) || 0;
+    
+    switch (emptyField) {
+        case 'vf-input':
+            // VF = VP × (1 + i)^n
+            if (vp <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            return vp * Math.pow(1 + (i / 100), n);
+            
+        case 'vp-input':
+            // VP = VF / (1 + i)^n
+            if (vf <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            return vf / Math.pow(1 + (i / 100), n);
+            
+        case 'i-input':
+            // i = (VF/VP)^(1/n) - 1
+            if (vp <= 0 || vf <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            if (vf <= vp) throw new Error('VF deve ser maior que VP');
+            return (Math.pow(vf / vp, 1 / n) - 1) * 100;
+            
+        case 'n-input':
+            // n = ln(VF/VP) / ln(1 + i)
+            if (vp <= 0 || vf <= 0 || i <= 0) throw new Error('Valores devem ser positivos');
+            if (vf <= vp) throw new Error('VF deve ser maior que VP');
+            return Math.log(vf / vp) / Math.log(1 + (i / 100));
+            
+        default:
+            throw new Error('Campo inválido');
+    }
+}
+
+// Função para calcular juros simples  
+function calculateSimpleInterest(emptyField) {
+    const vp = parseFloat(document.getElementById('vp-input')?.value) || 0;
+    const vf = parseFloat(document.getElementById('vf-input')?.value) || 0;
+    const j = parseFloat(document.getElementById('j-input')?.value) || 0;
+    const i = parseFloat(document.getElementById('i-input')?.value) || 0;
+    const n = parseFloat(document.getElementById('n-input')?.value) || 0;
+
+    switch (emptyField) {
+        case 'vf-input':
+            // VF = VP + J
+            if (vp <= 0 || j <= 0) throw new Error('Valores devem ser positivos');
+            return vp + j;
+            
+        case 'vp-input':
+            // VP = VF - J
+            if (vf <= 0 || j <= 0) throw new Error('Valores devem ser positivos');
+            if (vf <= j) throw new Error('VF deve ser maior que J');
+            return vf - j;
+            
+        case 'j-input':
+            // J = VP * i * n
+            if (vp <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            return vp * (i / 100) * n;
+            
+        case 'i-input':
+            // i = J / (VP * n)
+            if (vp <= 0 || j <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            return (j / (vp * n)) * 100;
+            
+        case 'n-input':
+            // n = J / (VP * i)
+            if (vp <= 0 || j <= 0 || i <= 0) throw new Error('Valores devem ser positivos');
+            return j / (vp * (i / 100));
+            
+        default:
+            throw new Error('Campo inválido');
+    }
+}
+
+// Função para converter taxa efetiva (modificada para desconto)
+function convertEffectiveRate(input) {
+    const value = parseFloat(input.value);
+    if (isNaN(value)) {
+        alert('Por favor, insira um valor válido.');
+        return;
+    }
+
+    if (currentType === 'racional' || currentType === 'comercial') {
+        // Para desconto racional e comercial
+        const n = parseFloat(document.getElementById('n-input')?.value) || 1;
+        
+        if (n <= 0) {
+            alert('Por favor, informe o número de períodos primeiro.');
+            return;
+        }
+
+        if (currentType === 'comercial') {
+            // Converter taxa comercial para efetiva: i_efetiva = i_comercial / (1 - i_comercial * n)
+            if ((value / 100) * n >= 1) {
+                alert('Taxa × período deve ser menor que 100%.');
+                return;
+            }
+            const effectiveRate = (value / 100) / (1 - (value / 100) * n);
+            const result = confirm(`Taxa comercial: ${value}%\nTaxa efetiva equivalente: ${(effectiveRate * 100).toFixed(6)}%\n\nDeseja usar a taxa efetiva?`);
+            
+            if (result) {
+                input.value = (effectiveRate * 100).toFixed(6);
+            }
+        } else {
+            // Converter taxa racional para efetiva: i_efetiva = i_racional
+            // (No desconto racional, a taxa já é efetiva)
+            const result = confirm(`Taxa informada: ${value}%\nNo desconto racional, a taxa já é efetiva.\nDeseja manter a taxa?`);
+            
+            if (!result) {
+                input.value = value.toFixed(6);
+            }
+        }
+    } else {
+        // Para juros compostos (conversão de periodicidade)
+        const monthlyRate = Math.pow(1 + (value / 100), 1/12) - 1;
+        const result = confirm(`Taxa anual: ${value}%\nTaxa mensal equivalente: ${(monthlyRate * 100).toFixed(6)}%\n\nDeseja usar a taxa mensal?`);
+        
+        if (result) {
+            input.value = (monthlyRate * 100).toFixed(6);
+        }
+    }
+}
+
+// Função para calcular desconto racional (atualizada para usar taxa efetiva)
+function calculateRationalDiscount(emptyField) {
+    const vp = parseFloat(document.getElementById('vp-input')?.value) || 0;
+    const vf = parseFloat(document.getElementById('vf-input')?.value) || 0;
+    const i = parseFloat(document.getElementById('i-input')?.value) || 0;
+    const n = parseFloat(document.getElementById('n-input')?.value) || 0;
+    
+    // No desconto racional, a taxa já é efetiva
+    const i_efetiva = i / 100;
+    
+    switch (emptyField) {
+        case 'vf-input':
+            if (vp <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            return vp * (1 + i_efetiva * n);
+            
+        case 'vp-input':
+            if (vf <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            return vf / (1 + i_efetiva * n);
+            
+        case 'i-input':
+            if (vp <= 0 || vf <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            if (vf <= vp) throw new Error('N deve ser maior que A');
+            return ((vf - vp) / (vp * n)) * 100;
+            
+        case 'n-input':
+            if (vp <= 0 || vf <= 0 || i <= 0) throw new Error('Valores devem ser positivos');
+            if (vf <= vp) throw new Error('N deve ser maior que A');
+            return (vf - vp) / (vp * i_efetiva);
+            
+        default:
+            throw new Error('Campo inválido');
+    }
+}
+
+// Função para calcular desconto comercial  
+function calculateCommercialDiscount(emptyField) {
+    const vp = parseFloat(document.getElementById('vp-input')?.value) || 0;
+    const vf = parseFloat(document.getElementById('vf-input')?.value) || 0;
+    const i = parseFloat(document.getElementById('i-input')?.value) || 0;
+    const n = parseFloat(document.getElementById('n-input')?.value) || 0;
+    
+    switch (emptyField) {
+        case 'vf-input':
+            // N = A / (1 - i × n)
+            if (vp <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            if ((i / 100) * n >= 1) throw new Error('Taxa × período deve ser menor que 100%');
+            return vp / (1 - (i / 100) * n);
+            
+        case 'vp-input':
+            // A = N × (1 - i × n)
+            if (vf <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            if ((i / 100) * n >= 1) throw new Error('Taxa × período deve ser menor que 100%');
+            return vf * (1 - (i / 100) * n);
+            
+        case 'i-input':
+            // i = (N - A) / (N × n)
+            if (vp <= 0 || vf <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
+            if (vf <= vp) throw new Error('N deve ser maior que A');
+            return ((vf - vp) / (vf * n)) * 100;
+            
+        case 'n-input':
+            // n = (N - A) / (N × i)
+            if (vp <= 0 || vf <= 0 || i <= 0) throw new Error('Valores devem ser positivos');
+            if (vf <= vp) throw new Error('N deve ser maior que A');
+            return (vf - vp) / (vf * (i / 100));
+            
+        default:
+            throw new Error('Campo inválido');
+    }
+}
+
+// Função para formatar resultado  
+function formatCurrency(value, fieldId) {
+    if (isNaN(value) || !isFinite(value)) return '0,00';
+    
+    // Para taxas (i-input)
+    if (fieldId === 'i-input') {
+        return parseFloat(value.toFixed(6)) + '%';
+    }
+    
+    // Para períodos (n-input)
+    if (fieldId === 'n-input') {
+        return parseFloat(value.toFixed(4)) + ' períodos';
+    }
+    
+    // Para valores monetários
+    return 'R$ ' + parseFloat(value.toFixed(2)).toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+// Função para limpar todos os campos
+function clearAll() {
+    document.querySelectorAll('.input-field').forEach(input => {
+        input.value = '';
+    });
+    document.getElementById('result-value').textContent = '0,00';
+    activeInput = null;
+    activeInputName = 'Nenhum campo selecionado';
+    document.getElementById('active-input-name').textContent = activeInputName;
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    generateInputFields();
+    updateResultLabel();
+});
+</script>
+</body>
+</html>
