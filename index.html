@@ -178,16 +178,22 @@
             background: currentColor;
             color: black;
         }
+        .botoes{
+            margin-left: 30px;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
 
         .mode-buttons {
             display: flex;
-            gap: 5px;
+            gap: 10px; 
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
         .mode-btn {
             flex: 1;
-            min-width: 100px;
+            min-width: 120px;
             padding: 8px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
@@ -456,6 +462,7 @@
                             <div class="variable-item" id="var-vf">VF: ---</div>
                             <div class="variable-item" id="var-j">J: ---</div>
                             <div class="variable-item" id="var-i">i: ---</div>
+                            <div class="variable-item" id="var-ic">ic: ---</div>
                             <div class="variable-item" id="var-n">n: ---</div>
                         </div>
                         <div class="formula-display" id="formula-display">
@@ -471,15 +478,16 @@
                     </div>
                     
                 </div>
-                
-                <div class="function-selector">
-                    <div class="func-btn orange" id="func-orange" onclick="setFunction('orange')">f</div>
-                    <div class="func-btn blue" id="func-blue" onclick="setFunction('blue')">g</div>
-                </div>
+                <div class="botoes">
+                    <div class="function-selector">
+                        <div class="func-btn orange" id="func-orange" onclick="setFunction('orange')">f</div>
+                        <div class="func-btn blue" id="func-blue" onclick="setFunction('blue')">g</div>
+                    </div>
 
-                <div class="mode-buttons">
-                    <div class="mode-btn active" onclick="setMode('simples')">SIMPLES</div>
-                    <div class="mode-btn" onclick="setMode('compostos')">COMPOSTOS</div> 
+                    <div class="mode-buttons">
+                        <div class="mode-btn active" onclick="setMode('simples')">SIMPLES</div>
+                        <div class="mode-btn" onclick="setMode('compostos')">COMPOSTOS</div> 
+                    </div>
                 </div>
                 <div class="keypad" id="keypad"> </div>
             </div>
@@ -652,14 +660,14 @@
         let displayValue = '0';
         let isEnteringNumber = false;
         let conversionMode = false;
- 
+
         const keyConfigurations = {
             simples: {
                 row1: [
                     { main: 'VP', orange: 'CONV', blue: '√x', key: 'vp' },
                     { main: 'VF', orange: '1/x', blue: 'ABS', key: 'vf' },
                     { main: 'J', orange: 'x²', blue: 'LOG', key: 'j' },
-                    { main: 'i', orange: '%', blue: 'LN', key: 'i' },
+                    { main: 'i', orange: 'ic', blue: '%', key: 'i' },
                     { main: 'n', orange: 'yˣ', blue: 'COS', key: 'n' }
                 ]
             },
@@ -668,7 +676,7 @@
                     { main: 'VP', orange: 'CONV', blue: '√x', key: 'vp' },
                     { main: 'VF', orange: '1/x', blue: 'ABS', key: 'vf' },
                     { main: 'J', orange: 'x²', blue: 'LOG', key: 'j' },
-                    { main: 'i', orange: '%', blue: 'LN', key: 'i' },
+                    { main: 'i', orange: 'ic', blue: '%', key: 'i' },
                     { main: 'n', orange: 'yˣ', blue: 'COS', key: 'n' }
                 ]
             }
@@ -676,48 +684,50 @@
  
         const commonKeys = [
             // Linha 2 - Operações básicas
-            { main: '√x', orange: '', blue: '', key: '**' },
+            { main: 'x²', orange: '', blue: '', key: '**' },
             { main: '^', orange: '', blue: '', key: '^' },
             { main: '÷', orange: '', blue: '', key: '/' },
             { main: 'x', orange: '', blue: '', key: '*' },
             { main: '⌫', orange: '', blue: '', key: 'backspace' },
             
             // Linha 3 
-            { main: '7', orange: '', blue: '', key: '7' },
-            { main: '8', orange: '', blue: '', key: '8' },
             { main: '9', orange: '', blue: '', key: '9' },
+            { main: '8', orange: '', blue: '', key: '8' },
+            { main: '7', orange: '', blue: '', key: '7' },
             { main: '−', orange: '', blue: '', key: '-' },
             { main: 'ON', orange: '', blue: '', key: 'on' },
             
             // Linha 4 
-            { main: '4', orange: '', blue: '', key: '4' },
-            { main: '5', orange: '', blue: '', key: '5' },
             { main: '6', orange: '', blue: '', key: '6' },
+            { main: '5', orange: '', blue: '', key: '5' },
+            { main: '4', orange: '', blue: '', key: '4' },
             { main: '+', orange: '', blue: '', key: '+' },
             { main: '=', orange: '', blue: '', key: 'equals'},
             
             // Linha 5 
-            { main: '1', orange: '', blue: '', key: '1' },
-            { main: '2', orange: '', blue: '', key: '2' },
             { main: '3', orange: '', blue: '', key: '3' },
+            { main: '2', orange: '', blue: '', key: '2' },
+            { main: '1', orange: '', blue: '', key: '1' },
             { main: '0', orange: '', blue: '', key: '0'}, 
             { main: '.', orange: '', blue: '', key: '.' }
         ];
  
         const conversionConfigs = {
             simples: [
-                { text: 'Dia → Mês', action: () => convertRate(30, 'dia para mês') },
-                { text: 'Mês → Dia', action: () => convertRate(1/30, 'mês para dia') },
-                { text: 'Mês → Ano', action: () => convertRate(12, 'mês para ano') },
-                { text: 'Ano → Mês', action: () => convertRate(1/12, 'ano para mês') },
-                { text: 'Dia → Ano', action: () => convertRate(365, 'dia para ano') },
-                { text: 'Ano → Dia', action: () => convertRate(1/365, 'ano para dia') }
+                { text: 'Dia → Mês', from: 'dia', to: 'mês', factor: 30 },
+                { text: 'Mês → Dia', from: 'mês', to: 'dia', factor: 1/30 },
+                { text: 'Mês → Ano', from: 'mês', to: 'ano', factor: 12 },
+                { text: 'Ano → Mês', from: 'ano', to: 'mês', factor: 1/12 },
+                { text: 'Dia → Ano', from: 'dia', to: 'ano', factor: 365 },
+                { text: 'Ano → Dia', from: 'ano', to: 'dia', factor: 1/365 }
             ],
             compostos: [
-                { text: 'Taxa Equiv.', action: () => toggleEquivalentRate() },
-                { text: 'Nom → Efet', action: () => nominalToEffective() },
-                { text: 'Efet → Nom', action: () => effectiveToNominal() },
-                { text: 'Proporcional', action: () => proportionalRate() }
+                { text: 'Dia → Mês', from: 'dia', to: 'mês', factor: 30 },
+                { text: 'Mês → Dia', from: 'mês', to: 'dia', factor: 1/30 },
+                { text: 'Mês → Ano', from: 'mês', to: 'ano', factor: 12 },
+                { text: 'Ano → Mês', from: 'ano', to: 'mês', factor: 1/12 },
+                { text: 'Dia → Ano', from: 'dia', to: 'ano', factor: 365 },
+                { text: 'Ano → Dia', from: 'ano', to: 'dia', factor: 1/365 }
             ]
         };
         
@@ -767,6 +777,21 @@
                     from: ['vf', 'vp', 'i'],
                     formula: 'n = (VF - VP) ÷ (VP × i)',
                     calculate: (vf, vp, i) => (vf - vp) / (vp * i/100)
+                },
+                ic_from_i_n: {
+                    from: ['i', 'n'],
+                    formula: 'ic = (1 + i)^n - 1',
+                    calculate: (i, n) => (Math.pow(1 + i/100, n) - 1) * 100
+                },
+                i_from_ic_n: {
+                    from: ['ic', 'n'],
+                    formula: 'i = (1 + ic)^(1/n) - 1',
+                    calculate: (ic, n) => (Math.pow(1 + ic/100, 1/n) - 1) * 100
+                },
+                n_from_i_ic: {
+                    from: ['i', 'ic'],
+                    formula: 'n = ln(1 + ic) / ln(1 + i)',
+                    calculate: (i, ic) => Math.log(1 + ic/100) / Math.log(1 + i/100)
                 }
             },
             compostos: {
@@ -794,6 +819,21 @@
                     from: ['vf', 'vp', 'i'],
                     formula: 'n = ln(VF ÷ VP) ÷ ln(1 + i)',
                     calculate: (vf, vp, i) => Math.log(vf/vp) / Math.log(1 + i/100)
+                },
+                 ic_from_i_n: {
+                    from: ['i', 'n'],
+                    formula: 'ic = (1 + i)^n - 1',
+                    calculate: (i, n) => (Math.pow(1 + i/100, n) - 1) * 100
+                },
+                i_from_ic_n: {
+                    from: ['ic', 'n'],
+                    formula: 'i = (1 + ic)^(1/n) - 1',
+                    calculate: (ic, n) => (Math.pow(1 + ic/100, 1/n) - 1) * 100
+                },
+                n_from_i_ic: {
+                    from: ['i', 'ic'],
+                    formula: 'n = ln(1 + ic) / ln(1 + i)',
+                    calculate: (i, ic) => Math.log(1 + ic/100) / Math.log(1 + i/100)
                 }
             }
         };
@@ -802,9 +842,9 @@
             const availableVars = Object.keys(financialValues).filter(key => 
                 financialValues[key] !== null && 
                 financialValues[key] !== undefined && 
-                financialValues[key] !== 0 &&  // Adicionar filtro para zeros
+                financialValues[key] !== 0 &&  
                 key !== missingVar &&
-                ['vp', 'vf', 'i', 'n', 'j'].includes(key) 
+                ['vp', 'vf', 'i', 'n', 'j', 'ic'].includes(key) 
             );
             console.log('Variáveis disponíveis:', availableVars);
             console.log('Procurando fórmula para:', missingVar);
@@ -815,23 +855,29 @@
             
             if (currentMode === 'simples') {
                 formulaPriority = {
-                    'vf': ['vf'], // VP, i, n -> VF
-                    'vp_from_vf_i_n': ['vp'], // VF, i, n -> VP  
-                    'vp_from_j_i_n': ['vp'], // J, i, n -> VP
-                    'j_from_vp_i_n': ['j'], // VP, i, n -> J
-                    'j_from_vf_vp': ['j'], // VF, VP -> J
-                    'i_from_j_vp_n': ['i'], // J, VP, n -> i
-                    'i_from_vf_vp_n': ['i'], // VF, VP, n -> i
-                    'n_from_j_vp_i': ['n'], // J, VP, i -> n
-                    'n_from_vf_vp_i': ['n'] // VF, VP, i -> n
+                    'vf': ['vf'], 
+                    'vp_from_vf_i_n': ['vp'], 
+                    'vp_from_j_i_n': ['vp'], 
+                    'j_from_vp_i_n': ['j'], 
+                    'j_from_vf_vp': ['j'], 
+                    'i_from_j_vp_n': ['i'],  
+                    'i_from_vf_vp_n': ['i'],
+                    'i_from_ic_n': ['i'], 
+                    'n_from_j_vp_i': ['n'],
+                    'n_from_vf_vp_i': ['n'],
+                    'n_from_i_ic': ['n'],
+                    'ic_from_i_n': ['ic'] 
                 };
             } else if (currentMode === 'compostos') {
                 formulaPriority = {
                     'vf': ['vf'], // VP, i, n -> VF
                     'vp': ['vp'], // VF, i, n -> VP  
                     'j_from_vf_vp': ['j'], // VF, VP -> J
-                    'i': ['i'], // VF, VP, n -> i (CHAVE CORRETA!)
-                    'n': ['n'] // VF, VP, i -> n (CHAVE CORRETA!)
+                    'i': ['i'], 
+                    'i_from_ic_n': ['i'], 
+                    'n': ['n'],
+                    'n_from_i_ic': ['n'],  // ← ADICIONAR
+                    'ic_from_i_n': ['ic'] 
                 };
             }
             
@@ -853,7 +899,6 @@
                     }
                 }
             }
-            
             console.log('Nenhuma fórmula encontrada');
             console.log('Fórmulas disponíveis para', currentMode + ':', Object.keys(currentFormulas));
             return null;
@@ -869,26 +914,31 @@
             if (setVars.length < 2) {
                 return { valid: false, error: 'PRECISA DE PELO MENOS 2 VALORES' };
             }
-            else if (setVars.length >= 4) {
+            
+            if (setVars.length >= 4) {
                 return { valid: false, error: 'MUITOS VALORES DEFINIDOS (MAX 3)' };
             }
              
             if (financialValues.i !== null && financialValues.i === 0 && currentMode === 'compostos') {
                 return { valid: false, error: 'TAXA NÃO PODE SER ZERO' };
             }
+            
             if (financialValues.n !== null && financialValues.n <= 0) {
                 return { valid: false, error: 'PERÍODOS DEVE SER > 0' };
             }
+            
             if (financialValues.vp !== null && financialValues.vp === 0 && 
                 (setVars.includes('i') || setVars.includes('n'))) {
                 return { valid: false, error: 'VP NÃO PODE SER ZERO' };
             }
+            
             return { valid: true, setVars };
         }
  
         function findMissingVariable(setVars) {
             const allVars = ['vp', 'vf', 'i', 'n', 'j'];
             const missingVars = allVars.filter(v => !setVars.includes(v));
+            
             if (missingVars.length !== 1) {
                 return { valid: false, error: 'DEIXE APENAS 1 VARIÁVEL VAZIA' };
             } 
@@ -945,21 +995,17 @@
                 const configs = conversionConfigs[currentMode];
                 
                 title.textContent = currentMode === 'simples' ? 
-                    'Conversão de Taxas (Proporcionais)' : 
-                    'Conversão de Taxas (Equivalentes)';
+                    'Conversão de Taxas (Proporcionais)' :'Conversão de Taxas (Equivalentes)';
                 
                 configs.forEach(config => {
                     const btn = document.createElement('div');
                     btn.className = 'conv-btn';
                     btn.textContent = config.text;
-                    btn.onclick = config.action;
+                    btn.onclick = () => convertRate(config.factor, config.from, config.to);
                     buttons.appendChild(btn);
                 });
-                
                 panel.classList.add('active');
-            } else {
-                panel.classList.remove('active');
-            }
+            } else { panel.classList.remove('active');}
         }
  
         function generateKeypad() {
@@ -1014,14 +1060,14 @@
         function updateVariablesDisplay() { 
             let displayVariables = {};
             if (currentMode === 'simples' || currentMode === 'compostos') {
-                displayVariables = { vp: 'VP', vf: 'VF', j: 'J', i: 'i', n: 'n' };
+                displayVariables = { vp: 'VP', vf: 'VF', j: 'J', i: 'i', ic: 'ic', n: 'n' };
             } else if (currentMode === 'desc-rac') {
                 displayVariables = { vf: 'N', vp: 'A', d: 'Dr', i: 'i', n: 't' };
             } else if (currentMode === 'desc-com') {
                 displayVariables = { vf: 'N', vp: 'A', d: 'Dc', i: 'i', n: 't' };
             } 
 
-            const variableElements = ['vp', 'vf', 'j', 'i', 'n'];
+            const variableElements = ['vp', 'vf', 'j', 'i', 'n', 'ic'];
             variableElements.forEach(key => {
                 const element = document.getElementById(`var-${key}`);
                 if (displayVariables[key]) {
@@ -1035,7 +1081,7 @@
                     
                     let displayText = displayVariables[key] + ': '; 
                     if (value !== null) {
-                        if (key === 'i') { displayText += formatNumber(value) + '%'; } 
+                        if (key === 'i' || key === 'ic') { displayText += formatNumber(value) + '%'; }
                         else { displayText += formatNumber(value); }
                         element.className = 'variable-item set';
                     } else {
@@ -1077,19 +1123,18 @@
             // Executar função orange/blue se ativa
             if (currentFunction && keyConfig) {
                 if (currentFunction === 'orange' && keyConfig.orange) {
-                    if (keyConfig.orange === 'CONV') {  toggleConversionMode(); } 
+                    if (keyConfig.orange === 'CONV') {  toggleConversionMode(); }
+                    else if (keyConfig.orange === 'ic') { setFinancialValue('ic'); }
                     else {  executeSpecialFunction(keyConfig.orange); }
                     
                     currentFunction = null;
                     document.querySelectorAll('.func-btn').forEach(btn => btn.classList.remove('active'));
-                    updateDisplay();
-                    return;
+                    updateDisplay();  return;
                 } else if (currentFunction === 'blue' && keyConfig.blue) {
                     executeSpecialFunction(keyConfig.blue);
                     currentFunction = null;
                     document.querySelectorAll('.func-btn').forEach(btn => btn.classList.remove('active'));
-                    updateDisplay();
-                    return;
+                    updateDisplay(); return;
                 }
             }
  
@@ -1101,47 +1146,33 @@
             switch(key) {
                 case '0': case '1': case '2': case '3': case '4':
                 case '5': case '6': case '7': case '8': case '9':
-                    enterNumber(key);
-                    break;
+                    enterNumber(key); break;
                 case '.':
-                    enterDecimal();
-                    break;
+                    enterDecimal(); break;
                 case '√x':
-                    changeSign();
-                    break;
+                    changeSign();  break;
                 case '^':
-                    clearDisplay();
-                    break;
-                case 'backspace':
-                    backspace();
-                    break;
-                case 'enter':
-                    enterValue();
-                    break;
+                    clearDisplay();  break;
+                case 'backspace': backspace(); break;
+                case 'enter': enterValue();  break;
                 case 'vp':
                 case 'vf':
                 case 'i':
+                case 'ic':
                 case 'n':
                 case 'j':
                 case 'd':
-                    setFinancialValue(key);
-                    break;
+                    setFinancialValue(key); break;
                 case 'equals':
-                case '=':
-                    console.log("Tecla pressionada:", key);
-                    calculate();
-                    break;
-                case 'on':
-                    clearAll();
-                    break;
+                case '=': calculate();  break;
+                case 'on':  clearAll(); break;
                 case '+':
                 case '-':
                 case '*':
                 case '/': 
                     break;
                 default: break;
-            }
-            updateDisplay();
+            }  updateDisplay();
         }
 
         function toggleConversionMode() {
@@ -1156,14 +1187,20 @@
             }
         }
 
-        function convertRate(multiplier, description) {
+        function convertRate(factor, fromUnit, toUnit) {
             const value = parseFloat(displayValue);
-            if (isNaN(value)) { showError('DIGITE UMA TAXA'); return; }
+            if (isNaN(value)) { showError('DIGITE UMA TAXA'); return;}
 
-            const result = value * multiplier;
+            let result;
+            if (currentMode === 'simples') { result = value * factor;} 
+            else { // Conversão equivalente para juros compostos
+                if (factor > 1) { result = (Math.pow(1 + value/100, factor) - 1) * 100;
+                } else {  result = (Math.pow(1 + value/100, factor) - 1) * 100;}
+            }
+
             displayValue = formatNumber(result);
             document.getElementById('display-line').textContent = 
-                `${description.toUpperCase()}: ${formatNumber(result)}%`;
+                `${fromUnit.toUpperCase()} → ${toUnit.toUpperCase()}: ${formatNumber(result)}%`;
             isEnteringNumber = false;
         }
 
@@ -1280,7 +1317,7 @@
         function clearAll() {
             displayValue = '0';
             isEnteringNumber = false;
-            financialValues = { vp: null, vf: null, i: null, n: null, j: null, d: null };
+            financialValues = { vp: null, vf: null, i: null, ic: null, n: null, j: null, d: null };
             document.getElementById('display-line').textContent = '';
             updateFormulaDisplay('---', '---');
             conversionMode = false;
@@ -1328,87 +1365,93 @@
             }
         }
 
-
-function calculate() {
-    console.log('Iniciando cálculo...', financialValues); 
-    try {   
-        const setVars = Object.keys(financialValues).filter(key => 
-            financialValues[key] !== null && 
-            ['vp', 'vf', 'i', 'n', 'j'].includes(key)
-        );
-        console.log('Variáveis definidas:', setVars);
-        if (setVars.length < 2) { showError('PRECISA DE PELO MENOS 2 VALORES');  return; } 
-        
-        const missingVars = ['vp', 'vf', 'i', 'n', 'j'].filter(v => !setVars.includes(v));
-        console.log('Variáveis faltando:', missingVars);
-         
-        let foundFormula = null;
-        let calculableVar = null; 
-        for (const missingVar of missingVars) {
-            const formula = findApplicableFormula(missingVar);
-            if (formula) {
-                foundFormula = formula;
-                calculableVar = missingVar;
-                break;
+        function calculate() {
+            console.log('Iniciando cálculo...', financialValues); 
+            try {   
+                const setVars = Object.keys(financialValues).filter(key => 
+                    financialValues[key] !== null && 
+                    ['vp', 'vf', 'i', 'ic', 'n', 'j'].includes(key)
+                );
+                
+                console.log('Variáveis definidas:', setVars);
+                
+                if (setVars.length < 2) {  
+                    showError('PRECISA DE PELO MENOS 2 VALORES'); 
+                    return; 
+                } 
+                
+                const missingVars = ['vp', 'vf', 'i', 'n', 'j', 'ic'].filter(v => !setVars.includes(v));
+                console.log('Variáveis faltando:', missingVars);
+                let foundFormula = null, calculableVar = null; 
+                for (const missingVar of missingVars) {
+                    const formula = findApplicableFormula(missingVar);
+                    if (formula) {
+                        foundFormula = formula;
+                        calculableVar = missingVar;
+                        break;
+                    }
+                }
+                
+                if (!foundFormula) {
+                    console.log('Nenhuma fórmula encontrada para as variáveis disponíveis:', setVars);
+                    showError('COMBINAÇÃO DE VARIÁVEIS NÃO SUPORTADA');
+                    return;
+                }
+                
+                console.log('Variável a ser calculada:', calculableVar);
+                const formula = foundFormula;
+                
+                if (!foundFormula) {
+                    console.error('Erro no cálculo:', calcResult.error);
+                    showError('ERRO NO CÁLCULO');
+                    return;
+                }
+                
+                const calcResult = executeCalculation(formula, calculableVar); 
+                if (!calcResult.success) {
+                    console.error('Erro no cálculo:', calcResult.error);
+                    showError('ERRO NO CÁLCULO');
+                    return;
+                }
+                
+                const result = calcResult.result;
+                console.log('Resultado calculado:', result);
+                
+                if (!isFinite(result) || isNaN(result)) {
+                    console.error('Resultado inválido:', result);
+                    showError('RESULTADO INVÁLIDO');
+                    return;
+                } 
+                financialValues[calculableVar] = result;
+                displayValue = formatNumber(result);
+                isEnteringNumber = false; 
+                const varName = calculableVar.toUpperCase();
+                const formattedResult = formatResult(result, calculableVar);
+                
+                document.getElementById('display-main').textContent = displayValue;
+                document.getElementById('display-line').textContent = `${varName} = ${formattedResult}`;
+                
+                updateFormulaDisplay(formula.formula, `${varName} = ${formattedResult}`);
+                updateDisplay();
+                
+                console.log(`${varName} calculado com sucesso usando: ${formula.description}`);
+                
+            } catch (error) {
+                console.error('Erro no cálculo:', error);
+                showError('ERRO NO CÁLCULO');
             }
         }
-        
-        if (!foundFormula) {
-            console.log('Nenhuma fórmula encontrada para as variáveis disponíveis:', setVars);
-            showError('COMBINAÇÃO DE VARIÁVEIS NÃO SUPORTADA');
-            return;
-        }
-        
-        console.log('Variável a ser calculada:', calculableVar);
-        const formula = foundFormula;
-        
-        if (!foundFormula) {
-            console.error('Erro no cálculo:', calcResult.error);
-            showError('ERRO NO CÁLCULO');
-            return;
-        }
-         
-        const calcResult = executeCalculation(formula, calculableVar); 
-        if (!calcResult.success) {
-            console.error('Erro no cálculo:', calcResult.error);
-            showError('ERRO NO CÁLCULO');
-            return;
-        }
-        
-        const result = calcResult.result;
-        console.log('Resultado calculado:', result);
-         
-        if (!isFinite(result) || isNaN(result)) {
-            console.error('Resultado inválido:', result);
-            showError('RESULTADO INVÁLIDO');
-            return;
-        } 
-        financialValues[calculableVar] = result;
-        displayValue = formatNumber(result);
-        isEnteringNumber = false; 
-        const varName = calculableVar.toUpperCase();
-        const formattedResult = formatResult(result, calculableVar);
-        
-        document.getElementById('display-main').textContent = displayValue;
-        document.getElementById('display-line').textContent = `${varName} = ${formattedResult}`;
-        
-        updateFormulaDisplay(formula.formula, `${varName} = ${formattedResult}`);
-        updateDisplay();
-        
-        console.log(`${varName} calculado com sucesso usando: ${formula.description}`);
-        
-    } catch (error) {
-        console.error('Erro no cálculo:', error);
-        showError('ERRO NO CÁLCULO');
-    }
-}
  
         function updateFormulaDisplay(formula, result) {
             const formulaElement = document.getElementById('current-formula');
             const resultElement = document.getElementById('formula-result');
             
-            if (formulaElement) { formulaElement.textContent = formula; }
-            if (resultElement) { resultElement.textContent = result;}
+            if (formulaElement) {
+                formulaElement.textContent = formula;
+            }
+            if (resultElement) {
+                resultElement.textContent = result;
+            }
         } 
 
         function showError(message) {
@@ -1422,7 +1465,7 @@ function calculate() {
         }
         
         function formatResult(value, variable) {
-            if (variable === 'i') {  return parseFloat(value.toFixed(4)) + '%';} 
+            if (variable === 'i' || variable === 'ic') {  return parseFloat(value.toFixed(4)) + '%';} 
             else if (variable === 'n') {  return parseFloat(value.toFixed(2));}
             else { return formatNumber(value);}
         }
