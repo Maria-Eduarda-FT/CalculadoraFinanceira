@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Financeira</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'><path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'/></svg>">
     <style>
-        * {
+       * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -20,396 +19,326 @@
             padding: 20px;
             overflow-x: hidden;
         }
-
         .main-container {
             display: flex;
-            gap: 20px;
+            flex-direction: row;
+            gap: 30px;
             width: 100%;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            min-height: calc(100vh - 40px);
         }
 
         .calculator-section {
-            flex: 1;
-            min-width: 600px;
+            width: 100%;
             display: flex;
-            flex-direction: row;  
-            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
         }
-
-        .formula-section {
-            width: 400px;  
-            min-width: 400px;  
-        }
-
-        .keypad-container { 
-            height: 33vw;  
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+        .calculator {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
-            order: 1;  
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
-        .calculator-container {
-            height: 60vw;
-            flex: 1; 
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
-            order: 2;  
+        .top-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 5px;
+        }
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .formula-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
         .formula-sheet {
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.15);
             border-radius: 24px;
-            height: 100%;
             box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            width: 100%;
+            max-width: 1000px; 
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.2rem;
-            font-weight: 300;
-            color: #ffffff;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .header p {
-            color: #a0a0a0;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .calculation-mode {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .mode-title {
-            font-size: 1.1rem;
-            color: #4facfe;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .mode-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .mode-btn {
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        .mode-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .mode-btn.active {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            border-color: #4facfe;
-        }
-
-        .instruction-box {
-            background: rgba(79, 172, 254, 0.1);
-            border: 1px solid rgba(79, 172, 254, 0.3);
-            border-radius: 12px;
+        .formula-display {
+            flex: 1;
+            position: relative; 
+            width:7 0%;
+            margin-left: 5px;
+            margin-right: 7px; 
             padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
         }
-
-        .instruction-box p {
+        .formula-display .formula-title {
+            color: #4facfe;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .formula-display .formula-equation {
+            font-family: 'Courier New', monospace;
             color: #ffffff;
             font-size: 0.9rem;
-            margin: 5px 0;
-        }
-
-        .instruction-box .highlight {
-            color: #4facfe;
-            font-weight: 600;
-        }
-
-        .inputs-section {
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .input-field {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 2px rgba(79, 172, 254, 0.2);
-        }
-
-        .input-field::placeholder {
-            color: #a0a0a0;
-        }
-
-        .input-field.empty-for-calculation {
-            background: rgba(255, 193, 7, 0.2);
-            border-color: rgba(255, 193, 7, 0.5);
-        }
-
-        .input-field.empty-for-calculation::placeholder {
-            color: #ffeb3b;
-        }
-
-        .input-with-button {
-            flex: 1;
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-converter {
-            padding: 0 15px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(79, 172, 254, 0.3);
-            color: #ffffff;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .btn-converter:hover {
-            background: rgba(79, 172, 254, 0.5);
-        }
-
-        .result-section {
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .result-label {
-            font-size: 1.1rem;
-            color: #a0a0a0;
-            margin-bottom: 12px;
-        }
-
-        .result-value {
-            font-size: 2rem;
-            font-weight: 300;
-            color: #4facfe;
-            text-align: right;
-            min-height: 48px;
-            line-height: 48px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            flex: 1;
-            height: 50px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-calculate {
-            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
-            color: white;
-        }
-
-        .btn-calculate:hover {
-            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
-        }
-
-        .btn-clear {
-            background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
-            color: white;
-        }
-
-        .btn-clear:hover {
-            background: linear-gradient(135deg, #ef5350 0%, #f44336 100%);
-        }
-
-        .keypad-header {
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
             text-align: center;
-            margin-bottom: 20px;
         }
-
-        .keypad-header h3 {
-            color: #ffffff;
+        .formula-display .formula-result {
+            color: #00ff00;
+            font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        .display {
+            background: #000;
+            border: 3px solid #333;
+            border-radius: 10px;
+            padding: 20px; 
+            margin-bottom: 20px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .mode-indicator {
+            font-size: 0.8rem;
+            color: #00ff00;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .display-line {
+            font-family: 'Courier New', monospace;
             font-size: 1.2rem;
-            font-weight: 300;
+            color: #00ff00;
+            text-align: right;
+            min-height: 25px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
             margin-bottom: 5px;
         }
-
-        .keypad-header p {
-            color: #a0a0a0;
-            font-size: 0.8rem;
+        .display-main {
+            font-family: 'Courier New', monospace;
+            font-size: 1.8rem;
+            color: #00ff00;
+            text-align: right;
+            font-weight: bold;
         }
-
-        .keypad {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        .display-content{
+            display: flex;
+            flex-direction: row;
+        }
+        .displayUpper{
+            display: flex;
+            flex-direction: row;
+            padding: 5px;
+        }
+        .function-selector {
+            display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .func-btn {
+            padding: 8px 16px;
+            border: 2px solid;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .func-btn.orange {
+            border-color: #ff6600;
+            color: #ff6600;
+        }
+        .func-btn.blue {
+            border-color: #0066ff;
+            color: #0066ff;
+        }
+        .func-btn.active {
+            background: currentColor;
+            color: black;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .mode-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+        }
+        .mode-btn.active {
+            background: #4facfe;
+            border-color: #4facfe;
+        }
+
+        .conversion-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            display: none;
+        }
+
+        .conversion-panel.active { display: block; }
+
+        .conversion-title {
+            color: #4facfe;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .conversion-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .conv-btn {
+            padding: 6px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .conv-btn:hover {  background: rgba(255, 255, 255, 0.2);}
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
         }
 
         .key {
-            height: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            font-size: 1.1rem;
-            font-weight: 500;
+            color: white;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            position: relative;
         }
-
         .key:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
-
-        .key:active {
-            transform: translateY(0);
-        }
-
-        .key.operator {
-            background: rgba(79, 172, 254, 0.3);
-        }
-
-        .key.operator:hover {
-            background: rgba(79, 172, 254, 0.5);
-        }
-
-        .key.clear {
-            background: rgba(244, 67, 54, 0.3);
-        }
-
-        .key.clear:hover {
-            background: rgba(244, 67, 54, 0.5);
-        }
-
-        .key.backspace {
-            background: rgba(255, 193, 7, 0.3);
-        }
-
-        .key.backspace:hover {
-            background: rgba(255, 193, 7, 0.5);
-        }
-
-        .active-input-display {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        .active-input-display span {
-            color: #4facfe;
-            font-size: 0.9rem;
-        }
-
-        .active-input-display div {
-            color: #ffffff;
+        .key.number {
+            background: rgba(100, 100, 100, 0.3);
             font-size: 1.2rem;
-            font-weight: 500;
-            margin-top: 5px;
+            font-weight: bold;
+        }
+        .key.operator {  background: rgba(79, 172, 254, 0.3); }
+        .key.financial {  background: rgba(255, 255, 255, 0.05); }
+
+        .key-main {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .key-orange {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            font-size: 0.7rem;
+            color: #ff6600;
+        }
+        .key-blue {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            font-size: 0.7rem;
+            color: #0066ff;
+        }
+        .key.wide {  grid-column: span 2;  }
+        .error {  color: #ff4444 !important; }
+        .success {  color: #44ff44 !important; }
+
+        .variables-display {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 100px;
+            flex: 1;
         }
 
+        .variable-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+        .variable-item.set {
+            color: #00ff00;
+        }
+        .variable-item.calculated {
+            color: #44ff44;
+            font-weight: bold;
+        }
+
+        /* Fórmulas */
         .formula-content {
             padding: 30px;
             height: 100%;
             overflow-y: auto;
         }
-
         .formula-header {
             text-align: center;
             margin-bottom: 30px;
         }
-
         .formula-header h2 {
             color: #ffffff;
             font-size: 1.3rem;
             font-weight: 300;
             margin-bottom: 8px;
         }
-
         .formula-header p {
             color: #a0a0a0;
             font-size: 0.8rem;
         }
-
-        .formula-section-content {
-            margin-bottom: 30px;
-        }
-
+        .formula-section-content { margin-bottom: 30px; }
         .formula-section-content h3 {
             color: #ffffff;
             font-size: 1rem;
@@ -417,7 +346,6 @@
             border-bottom: 2px solid rgba(79, 172, 254, 0.3);
             padding-bottom: 8px;
         }
-
         .formula-item {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -426,19 +354,16 @@
             margin-bottom: 15px;
             transition: all 0.3s ease;
         }
-
         .formula-item:hover {
             background: rgba(255, 255, 255, 0.08);
             transform: translateX(5px);
         }
-
         .formula-title {
             color: #4facfe;
             font-size: 0.9rem;
             font-weight: 500;
             margin-bottom: 8px;
         }
-
         .formula-equation {
             font-family: 'Courier New', monospace;
             color: #ffffff;
@@ -450,18 +375,15 @@
             text-align: center;
             margin-bottom: 8px;
         }
-
         .formula-description {
             color: #a0a0a0;
             font-size: 0.75rem;
             line-height: 1.4;
         }
-
         .formula-variable {
             color: #f093fb;
             font-weight: 500;
         }
-
         .formula-note {
             background: rgba(79, 172, 254, 0.1);
             border-left: 3px solid #4facfe;
@@ -469,215 +391,150 @@
             margin: 20px 0;
             border-radius: 0 8px 8px 0;
         }
-
         .formula-note p {
             color: #e0e0e0;
             font-size: 0.8rem;
             margin: 8px 0;
         }
-
-        .examples-table {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .examples-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .examples-table th,
-        .examples-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .examples-table th {
-            background: rgba(79, 172, 254, 0.2);
-            color: #ffffff;
-            font-weight: 500;
-        }
-
-        .examples-table td {
-            color: #e0e0e0;
-            font-size: 0.8rem;
-        }
-
         .formula-content::-webkit-scrollbar {
             width: 8px;
         }
-
         .formula-content::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
         }
-
         .formula-content::-webkit-scrollbar-thumb {
             background: rgba(79, 172, 254, 0.5);
             border-radius: 4px;
         }
-
         .formula-content::-webkit-scrollbar-thumb:hover {
             background: rgba(79, 172, 254, 0.7);
         }
 
-        /* Responsividade */
-        @media (max-width: 1024px) {
-            .main-container {
-                flex-direction: column;
-                gap: 20px;
-            }
-            .calculator-section {
-                flex-direction: column; 
-            }
-            
-            .keypad-container,
-            .calculator-container,
-            .formula-section {
-                width: auto;  
-            }
-
-            .calculator-container {
-                padding: 24px;
-            }
-
-            .keypad-container {
-                padding: 20px;
-            }
-
-            .formula-sheet {
-                max-height: 400px;
-            }
+    /* Responsividade */
+    @media (max-width: 1024px) {
+        .main-container { flex-direction: column; }
+        .calculator { max-width: 80%; }
+    }
+    @media (max-width: 768px) {
+        body { padding: 10px;  } 
+        .calculator {  padding: 20px;  } 
+        .keypad {  grid-template-columns: repeat(4, 1fr);  } 
+        .mode-buttons {  flex-direction: column;  }  
+        .formula-content { padding: 20px; }
+    }
+    @media (max-width: 480px) {
+        .keypad {  grid-template-columns: repeat(3, 1fr);  }
+        .key {
+            height: 50px;
+            font-size: 0.8rem;
         }
-
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 10px;
-            }
-
-            .calculator-container {
-                padding: 20px;
-            }
-
-            .keypad-container {
-                padding: 15px;
-            }
-
-            .input-group {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .mode-selector {
-                grid-template-columns: 1fr;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .keypad {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
+        .formula-content { padding: 15px; }
+    }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <!-- Seção da Calculadora -->
+    <div class="main-container"> 
         <div class="calculator-section">
-            <!--<div class="keypad-container">
-                <div class="keypad-header">
-                    <h3>Teclado Numérico</h3>
-                    <p>Clique nos campos para ativar a entrada</p>
+            <div class="calculator">
+
+                <div class="top-section">
+                    <div class="variables-display" id="variables-display">
+                        <div class="conversion-panel" id="conversion-panel">
+                            <div class="conversion-title" id="conversion-title">Conversão de Taxas</div>
+                            <div class="conversion-buttons" id="conversion-buttons">
+                                <!-- Botões gerados dinamicamente -->
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="display">
+                    <div class="display-content">
+                        <div class="left-section">
+                            <div class="variable-item" id="var-vp">VP: ---</div>
+                            <div class="variable-item" id="var-vf">VF: ---</div>
+                            <div class="variable-item" id="var-j">J: ---</div>
+                            <div class="variable-item" id="var-i">i: ---</div>
+                            <div class="variable-item" id="var-n">n: ---</div>
+                        </div>
+                        <div class="formula-display" id="formula-display">
+                            <div class="formula-title">Fórmula Aplicada:</div>
+                            <div class="formula-equation" id="current-formula">---</div>
+                            <div class="formula-result" id="formula-result">---</div>
+                        </div>
+                    </div>
+                    <div class="displayUp">
+                        <div class="mode-indicator" id="mode-indicator">JUROS SIMPLES</div>
+                        <div class="display-line" id="display-line"></div>
+                        <div class="display-main" id="display-main">0</div> 
+                    </div>
+                    
                 </div>
                 
-                <div class="active-input-display">
-                    <span>Campo ativo:</span>
-                    <div id="active-input-name">Nenhum campo selecionado</div>
+                <div class="function-selector">
+                    <div class="func-btn orange" id="func-orange" onclick="setFunction('orange')">f</div>
+                    <div class="func-btn blue" id="func-blue" onclick="setFunction('blue')">g</div>
                 </div>
 
-                <div class="keypad">
-                    <div class="key clear" onclick="clearInput()">C</div>
-                    <div class="key backspace" onclick="backspace()">⌫</div>
-                    <div class="key operator" onclick="insertValue('.')">.</div>
-                    <div class="key operator" onclick="insertValue('/')">/</div>
-                    
-                    <div class="key" onclick="insertValue('7')">7</div>
-                    <div class="key" onclick="insertValue('8')">8</div>
-                    <div class="key" onclick="insertValue('9')">9</div>
-                    <div class="key operator" onclick="insertValue('*')">×</div>
-                    
-                    <div class="key" onclick="insertValue('4')">4</div>
-                    <div class="key" onclick="insertValue('5')">5</div>
-                    <div class="key" onclick="insertValue('6')">6</div>
-                    <div class="key operator" onclick="insertValue('-')">-</div>
-                    
-                    <div class="key" onclick="insertValue('1')">1</div>
-                    <div class="key" onclick="insertValue('2')">2</div>
-                    <div class="key" onclick="insertValue('3')">3</div>
-                    <div class="key operator" onclick="insertValue('+')">+</div>
-                    
-                    <div class="key" onclick="insertValue('0')" style="grid-column: span 2;">0</div>
-                    <div class="key operator" onclick="calculate()">=</div>
-                    <div class="key operator" onclick="insertValue('%')">%</div>
+                <div class="mode-buttons">
+                    <div class="mode-btn active" onclick="setMode('simples')">SIMPLES</div>
+                    <div class="mode-btn" onclick="setMode('compostos')">COMPOSTOS</div> 
                 </div>
-            </div>-->
-
-            <div class="calculator-container">
-                <div class="header">
-                    <h1>Calculadora Financeira</h1>
-                    <p>Juros • Descontos • Cálculos financeiros</p>
-                </div>
-
-                <div class="calculation-mode">
-                    <div class="mode-title">Tipo de Cálculo:</div>
-                    <div class="mode-selector">
-                        <div class="mode-btn type-btn active" onclick="setCalculationType('compostos')">Juros Compostos</div>
-                        <div class="mode-btn type-btn" onclick="setCalculationType('simples')">Juros Simples</div>
-                        <div class="mode-btn type-btn" onclick="setCalculationType('racional')">Desconto Racional</div>
-                        <div class="mode-btn type-btn" onclick="setCalculationType('comercial')">Desconto Comercial</div>
-                    </div>
-                </div>
-
-                <!-- Inputs dinâmicos -->
-                <div id="input-container">
-                    <!-- Os campos serão inseridos dinamicamente aqui -->
-                </div>
-
-                <div class="result-section">
-                    <div class="result-label" id="result-label">Resultado:</div>
-                    <div class="result-value" id="result-value">0,00</div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn btn-calculate" onclick="calculate()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 6 9 17l-5-5"/>
-                        </svg>
-                        Calcular
-                    </button>
-                    <button class="btn btn-clear" onclick="clearAll()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 6h18l-1.5 14.5H4.5L3 6z"/>
-                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                        </svg>
-                        Limpar
-                    </button>
-                </div>
+                <div class="keypad" id="keypad"> </div>
             </div>
         </div>
-
-        <!-- Seção das Fórmulas -->
+ 
         <div class="formula-section">
             <div class="formula-sheet">
                 <div class="formula-content">
                     <div class="formula-header">
                         <h2>Fórmulas & Exemplos</h2>
                         <p>Matemática Financeira</p>
+                    </div>
+
+                    <div class="formula-section-content">
+                        <h3>Fórmulas de Juros Simples</h3>
+                        
+                        <div class="formula-item">
+                            <div class="formula-title">Montante Simples</div>
+                            <div class="formula-equation">VF = VP × (1 + i × n)</div>
+                            <div class="formula-description">
+                                Calcula o montante em juros simples
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Juros Simples</div>
+                            <div class="formula-equation">J = VP × i × n</div>
+                            <div class="formula-description">
+                                Calcula os juros em regime simples
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Valor Presente</div>
+                            <div class="formula-equation">VP = VF ÷ (1 + i × n)</div>
+                            <div class="formula-description">
+                                Calcula o capital inicial
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Taxa de Juros</div>
+                            <div class="formula-equation">i = J ÷ (VP × n)</div>
+                            <div class="formula-description">
+                                Calcula a taxa de juros
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Tempo</div>
+                            <div class="formula-equation">n = J ÷ (VP × i)</div>
+                            <div class="formula-description">
+                                Calcula o número de períodos
+                            </div>
+                        </div>
                     </div>
 
                     <div class="formula-section-content">
@@ -700,10 +557,18 @@
                         </div>
 
                         <div class="formula-item">
+                            <div class="formula-title">Juros Compostos</div>
+                            <div class="formula-equation">J = VF - VP</div>
+                            <div class="formula-description">
+                                Calcula os juros em regime composto
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
                             <div class="formula-title">Taxa de Juros</div>
                             <div class="formula-equation">i = (VF ÷ VP)^(1/n) - 1</div>
                             <div class="formula-description">
-                                Determina a taxa de juros necessária para atingir o objetivo
+                                Determina a taxa de juros necessária
                             </div>
                         </div>
 
@@ -711,27 +576,35 @@
                             <div class="formula-title">Número de Períodos</div>
                             <div class="formula-equation">n = ln(VF ÷ VP) ÷ ln(1 + i)</div>
                             <div class="formula-description">
-                                Calcula o tempo necessário para atingir o valor futuro
+                                Calcula o tempo necessário
                             </div>
                         </div>
                     </div>
 
                     <div class="formula-section-content">
-                        <h3>Fórmulas de Juros Simples</h3>
+                        <h3>Conversão de Taxas</h3>
                         
                         <div class="formula-item">
-                            <div class="formula-title">Montante Simples</div>
-                            <div class="formula-equation">M = C × (1 + i × n)</div>
+                            <div class="formula-title">Taxa Proporcional (Simples)</div>
+                            <div class="formula-equation">i₂ = i₁ × (n₂ ÷ n₁)</div>
                             <div class="formula-description">
-                                Calcula o montante em juros simples
+                                Conversão direta proporcional ao tempo
                             </div>
                         </div>
 
                         <div class="formula-item">
-                            <div class="formula-title">Juros Simples</div>
-                            <div class="formula-equation">J = C × i × n</div>
+                            <div class="formula-title">Taxa Equivalente (Compostos)</div>
+                            <div class="formula-equation">i₂ = (1 + i₁)^(n₂ ÷ n₁) - 1</div>
                             <div class="formula-description">
-                                Calcula os juros em regime simples
+                                Taxas que produzem o mesmo montante
+                            </div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-title">Taxa Nominal vs Efetiva</div>
+                            <div class="formula-equation">i_efetiva = (1 + i_nominal ÷ k)^k - 1</div>
+                            <div class="formula-description">
+                                k = número de capitalizações por período
                             </div>
                         </div>
                     </div>
@@ -740,29 +613,32 @@
                         <h3>Fórmulas de Desconto</h3>
                         
                         <div class="formula-item">
-                            <div class="formula-title">Desconto Racional</div>
-                            <div class="formula-equation">N = A × (1 + i × n)</div>
+                            <div class="formula-title">Desconto Racional Simples</div>
+                            <div class="formula-equation">Dr = (N × i × t) ÷ (1 + i × t)</div>
                             <div class="formula-description">
-                                Valor nominal baseado no valor atual
+                                Valor Atual: A = N ÷ (1 + i × t)
                             </div>
                         </div>
 
                         <div class="formula-item">
-                            <div class="formula-title">Desconto Comercial</div>
-                            <div class="formula-equation">A = N × (1 - i × n)</div>
+                            <div class="formula-title">Desconto Comercial Simples</div>
+                            <div class="formula-equation">Dc = N × i × t</div>
                             <div class="formula-description">
-                                Valor atual baseado no valor nominal
+                                Valor Atual: A = N × (1 - i × t)
                             </div>
                         </div>
                     </div>
 
                     <div class="formula-note">
                         <p><strong>Legenda das Variáveis:</strong></p>
-                        <p><span class="formula-variable">VP/C/A</span> = Valor Presente/Capital/Atual</p>
-                        <p><span class="formula-variable">VF/M/N</span> = Valor Futuro/Montante/Nominal</p>
-                        <p><span class="formula-variable">i</span> = Taxa de juros (em decimal)</p>
-                        <p><span class="formula-variable">n</span> = Número de períodos</p>
+                        <p><span class="formula-variable">VP</span> = Valor Presente/Capital</p>
+                        <p><span class="formula-variable">VF</span> = Valor Futuro/Montante</p>
                         <p><span class="formula-variable">J</span> = Juros</p>
+                        <p><span class="formula-variable">i</span> = Taxa de juros (em %)</p>
+                        <p><span class="formula-variable">n</span> = Número de períodos/tempo</p>
+                        <p><span class="formula-variable">N</span> = Valor Nominal</p>
+                        <p><span class="formula-variable">A</span> = Valor Atual</p>
+                        <p><span class="formula-variable">Dr/Dc</span> = Desconto Racional/Comercial</p>
                     </div>
                 </div>
             </div>
@@ -770,485 +646,812 @@
     </div>
 
     <script> 
-// Variáveis globais
-let currentType = 'compostos';
-let activeInput = null;
-let activeInputName = 'Nenhum campo selecionado';
-
-// Modificação na configuração dos campos
-const fieldConfigurations = {
-    'compostos': [
-        { id: 'vp-input', label: 'Valor Presente (VP)', type: 'number', placeholder: 'Valor Presente (VP)' },
-        { id: 'vf-input', label: 'Valor Futuro (VF)', type: 'number', placeholder: 'Valor Futuro (VF)' },
-        { id: 'i-input', label: 'Taxa de Juros (%)', type: 'number', placeholder: 'Taxa de Juros (%)', hasButton: true, buttonText: 'Taxa Efetiva' },
-        { id: 'n-input', label: 'Períodos (n)', type: 'number', placeholder: 'Períodos (n)' }
-    ],
-    'simples': [
-    { id: 'vp-input', label: 'Valor Presente (VP)', type: 'number', placeholder: 'Valor Presente (VP)' },
-    { id: 'vf-input', label: 'Valor Futuro (VF)', type: 'number', placeholder: 'Valor Futuro (VF)' },
-    { id: 'j-input', label: 'Juros (J)', type: 'number', placeholder: 'Juros (J)' },
-    { id: 'i-input', label: 'Taxa de Juros (%)', type: 'number', placeholder: 'Taxa de Juros (%)' },
-    { id: 'n-input', label: 'Períodos (n)', type: 'number', placeholder: 'Períodos (n)' }
-],
-    'racional': [
-        { id: 'vp-input', label: 'Valor Atual (A)', type: 'number', placeholder: 'Valor Atual (A)' },
-        { id: 'vf-input', label: 'Valor Nominal (N)', type: 'number', placeholder: 'Valor Nominal (N)' },
-        { id: 'i-input', label: 'Taxa de Desconto (%)', type: 'number', placeholder: 'Taxa de Desconto (%)', hasButton: true, buttonText: 'Taxa Efetiva' },
-        { id: 'n-input', label: 'Períodos (n)', type: 'number', placeholder: 'Períodos (n)' }
-    ],
-    'comercial': [
-        { id: 'vp-input', label: 'Valor Atual (A)', type: 'number', placeholder: 'Valor Atual (A)' },
-        { id: 'vf-input', label: 'Valor Nominal (N)', type: 'number', placeholder: 'Valor Nominal (N)' },
-        { id: 'i-input', label: 'Taxa de Desconto (%)', type: 'number', placeholder: 'Taxa de Desconto (%)', hasButton: true, buttonText: 'Taxa Efetiva' },
-        { id: 'n-input', label: 'Períodos (n)', type: 'number', placeholder: 'Períodos (n)' }
-    ]
-};
-
-// Função para definir tipo de cálculo
-function setCalculationType(type) {
-    currentType = type;
-    
-    // Atualizar botões de tipo
-    document.querySelectorAll('.type-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    // Regenerar campos
-    generateInputFields();
-    updateResultLabel();
-}
-
-// Função para gerar campos de entrada
-function generateInputFields() {
-    const container = document.getElementById('input-container');
-    const fields = fieldConfigurations[currentType];
-    
-    container.innerHTML = '';
-    
-    fields.forEach(field => {
-        const inputGroup = document.createElement('div');
-        inputGroup.className = 'input-group';
+        let currentMode = 'simples';
+        let currentFunction = null; // null, 'orange', 'blue'
+        let financialValues = { vp: null, vf: null, i: null, n: null, j: null, d: null};
+        let displayValue = '0';
+        let isEnteringNumber = false;
+        let conversionMode = false;
+ 
+        const keyConfigurations = {
+            simples: {
+                row1: [
+                    { main: 'VP', orange: 'CONV', blue: '√x', key: 'vp' },
+                    { main: 'VF', orange: '1/x', blue: 'ABS', key: 'vf' },
+                    { main: 'J', orange: 'x²', blue: 'LOG', key: 'j' },
+                    { main: 'i', orange: '%', blue: 'LN', key: 'i' },
+                    { main: 'n', orange: 'yˣ', blue: 'COS', key: 'n' }
+                ]
+            },
+            compostos: {
+                row1: [
+                    { main: 'VP', orange: 'CONV', blue: '√x', key: 'vp' },
+                    { main: 'VF', orange: '1/x', blue: 'ABS', key: 'vf' },
+                    { main: 'J', orange: 'x²', blue: 'LOG', key: 'j' },
+                    { main: 'i', orange: '%', blue: 'LN', key: 'i' },
+                    { main: 'n', orange: 'yˣ', blue: 'COS', key: 'n' }
+                ]
+            }
+        };
+ 
+        const commonKeys = [
+            // Linha 2 - Operações básicas
+            { main: '√x', orange: '', blue: '', key: '**' },
+            { main: '^', orange: '', blue: '', key: '^' },
+            { main: '÷', orange: '', blue: '', key: '/' },
+            { main: 'x', orange: '', blue: '', key: '*' },
+            { main: '⌫', orange: '', blue: '', key: 'backspace' },
+            
+            // Linha 3 
+            { main: '7', orange: '', blue: '', key: '7' },
+            { main: '8', orange: '', blue: '', key: '8' },
+            { main: '9', orange: '', blue: '', key: '9' },
+            { main: '−', orange: '', blue: '', key: '-' },
+            { main: 'ON', orange: '', blue: '', key: 'on' },
+            
+            // Linha 4 
+            { main: '4', orange: '', blue: '', key: '4' },
+            { main: '5', orange: '', blue: '', key: '5' },
+            { main: '6', orange: '', blue: '', key: '6' },
+            { main: '+', orange: '', blue: '', key: '+' },
+            { main: '=', orange: '', blue: '', key: 'equals'},
+            
+            // Linha 5 
+            { main: '1', orange: '', blue: '', key: '1' },
+            { main: '2', orange: '', blue: '', key: '2' },
+            { main: '3', orange: '', blue: '', key: '3' },
+            { main: '0', orange: '', blue: '', key: '0'}, 
+            { main: '.', orange: '', blue: '', key: '.' }
+        ];
+ 
+        const conversionConfigs = {
+            simples: [
+                { text: 'Dia → Mês', action: () => convertRate(30, 'dia para mês') },
+                { text: 'Mês → Dia', action: () => convertRate(1/30, 'mês para dia') },
+                { text: 'Mês → Ano', action: () => convertRate(12, 'mês para ano') },
+                { text: 'Ano → Mês', action: () => convertRate(1/12, 'ano para mês') },
+                { text: 'Dia → Ano', action: () => convertRate(365, 'dia para ano') },
+                { text: 'Ano → Dia', action: () => convertRate(1/365, 'ano para dia') }
+            ],
+            compostos: [
+                { text: 'Taxa Equiv.', action: () => toggleEquivalentRate() },
+                { text: 'Nom → Efet', action: () => nominalToEffective() },
+                { text: 'Efet → Nom', action: () => effectiveToNominal() },
+                { text: 'Proporcional', action: () => proportionalRate() }
+            ]
+        };
         
-        const label = document.createElement('label');
-        label.htmlFor = field.id;
-        label.textContent = field.label;
-        label.style.display = 'block';
-        label.style.marginBottom = '5px';
-        label.style.color = '#ffffff';
-        
-        inputGroup.appendChild(label);
+        const formulas = {
+            simples: {
+                vf: {
+                    from: ['vp', 'i', 'n'],
+                    formula: 'VF = VP × (1 + i × n)',
+                    calculate: (vp, i, n) => vp * (1 + i/100 * n)
+                },
+                vp_from_vf_i_n: {
+                    from: ['vf', 'i', 'n'],
+                    formula: 'VP = VF ÷ (1 + i × n)',
+                    calculate: (vf, i, n) => vf / (1 + i/100 * n)
+                },
+                vp_from_j_i_n: {
+                    from: ['j', 'i', 'n'],
+                    formula: 'VP = J ÷ (i × n)',
+                    calculate: (j, i, n) => j / (i/100 * n)
+                },
+                j_from_vp_i_n: {
+                    from: ['vp', 'i', 'n'],
+                    formula: 'J = VP × i × n',
+                    calculate: (vp, i, n) => vp * i/100 * n
+                },
+                j_from_vf_vp: {
+                    from: ['vf', 'vp'],
+                    formula: 'J = VF - VP',
+                    calculate: (vf, vp) => vf - vp
+                },
+                i_from_j_vp_n: {
+                    from: ['j', 'vp', 'n'],
+                    formula: 'i = J ÷ (VP × n)',
+                    calculate: (j, vp, n) => (j / (vp * n)) * 100
+                },
+                i_from_vf_vp_n: {
+                    from: ['vf', 'vp', 'n'],
+                    formula: 'i = (VF - VP) ÷ (VP × n)',
+                    calculate: (vf, vp, n) => ((vf - vp) / (vp * n)) * 100
+                },
+                n_from_j_vp_i: {
+                    from: ['j', 'vp', 'i'],
+                    formula: 'n = J ÷ (VP × i)',
+                    calculate: (j, vp, i) => j / (vp * i/100)
+                },
+                n_from_vf_vp_i: {
+                    from: ['vf', 'vp', 'i'],
+                    formula: 'n = (VF - VP) ÷ (VP × i)',
+                    calculate: (vf, vp, i) => (vf - vp) / (vp * i/100)
+                }
+            },
+            compostos: {
+                vf: {
+                    from: ['vp', 'i', 'n'],
+                    formula: 'VF = VP × (1 + i)ⁿ',
+                    calculate: (vp, i, n) => vp * Math.pow(1 + i/100, n)
+                },
+                vp: {
+                    from: ['vf', 'i', 'n'],
+                    formula: 'VP = VF ÷ (1 + i)ⁿ',
+                    calculate: (vf, i, n) => vf / Math.pow(1 + i/100, n)
+                },
+                j_from_vf_vp: {
+                    from: ['vf', 'vp'],
+                    formula: 'J = VF - VP',
+                    calculate: (vf, vp) => vf - vp
+                },
+                i: {
+                    from: ['vf', 'vp', 'n'],
+                    formula: 'i = (VF ÷ VP)^(1/n) - 1',
+                    calculate: (vf, vp, n) => (Math.pow(vf/vp, 1/n) - 1) * 100
+                },
+                n: {
+                    from: ['vf', 'vp', 'i'],
+                    formula: 'n = ln(VF ÷ VP) ÷ ln(1 + i)',
+                    calculate: (vf, vp, i) => Math.log(vf/vp) / Math.log(1 + i/100)
+                }
+            }
+        };
 
-        if (field.hasButton) {
-            const inputWithButton = document.createElement('div');
-            inputWithButton.className = 'input-with-button';
+        function findApplicableFormula(missingVar) {
+            const availableVars = Object.keys(financialValues).filter(key => 
+                financialValues[key] !== null && 
+                financialValues[key] !== undefined && 
+                financialValues[key] !== 0 &&  // Adicionar filtro para zeros
+                key !== missingVar &&
+                ['vp', 'vf', 'i', 'n', 'j'].includes(key) 
+            );
+            console.log('Variáveis disponíveis:', availableVars);
+            console.log('Procurando fórmula para:', missingVar);
+            console.log('Modo atual:', currentMode);
             
-            const input = document.createElement('input');
-            input.type = field.type;
-            input.id = field.id;
-            input.className = 'input-field';
-            input.placeholder = field.placeholder;
-            input.step = 'any';
-            input.addEventListener('focus', () => setActiveInput(input, field.label));
-            input.addEventListener('input', formatInput);
+            const currentFormulas = formulas[currentMode]; 
+            let formulaPriority;
             
-            const button = document.createElement('button');
-            button.className = 'btn-converter';
-            button.textContent = field.buttonText;
-            button.onclick = () => convertEffectiveRate(input);
+            if (currentMode === 'simples') {
+                formulaPriority = {
+                    'vf': ['vf'], // VP, i, n -> VF
+                    'vp_from_vf_i_n': ['vp'], // VF, i, n -> VP  
+                    'vp_from_j_i_n': ['vp'], // J, i, n -> VP
+                    'j_from_vp_i_n': ['j'], // VP, i, n -> J
+                    'j_from_vf_vp': ['j'], // VF, VP -> J
+                    'i_from_j_vp_n': ['i'], // J, VP, n -> i
+                    'i_from_vf_vp_n': ['i'], // VF, VP, n -> i
+                    'n_from_j_vp_i': ['n'], // J, VP, i -> n
+                    'n_from_vf_vp_i': ['n'] // VF, VP, i -> n
+                };
+            } else if (currentMode === 'compostos') {
+                formulaPriority = {
+                    'vf': ['vf'], // VP, i, n -> VF
+                    'vp': ['vp'], // VF, i, n -> VP  
+                    'j_from_vf_vp': ['j'], // VF, VP -> J
+                    'i': ['i'], // VF, VP, n -> i (CHAVE CORRETA!)
+                    'n': ['n'] // VF, VP, i -> n (CHAVE CORRETA!)
+                };
+            }
             
-            inputWithButton.appendChild(input);
-            inputWithButton.appendChild(button);
-            inputGroup.appendChild(inputWithButton);
-        } else {
-            const input = document.createElement('input');
-            input.type = field.type;
-            input.id = field.id;
-            input.className = 'input-field';
-            input.placeholder = field.placeholder;
-            input.step = 'any';
-            input.addEventListener('focus', () => setActiveInput(input, field.label));
-            input.addEventListener('input', formatInput);
+            for (const [key, targets] of Object.entries(formulaPriority)) {
+                if (targets.includes(missingVar) && currentFormulas[key]) {
+                    const formula = currentFormulas[key];
+                    const hasAllRequired = formula.from.every(reqVar =>
+                        availableVars.includes(reqVar)
+                    );
+                    
+                    if (hasAllRequired) {
+                        console.log(`Fórmula encontrada: ${key}`);
+                        console.log(`Fórmula requer: [${formula.from.join(', ')}]`);
+                        console.log(`Variáveis disponíveis: [${availableVars.join(', ')}]`);
+                        return { key, ...formula };
+                    } else {  
+                        console.log(`Ignorando fórmula ${key}, faltam variáveis:`, 
+                            formula.from.filter(reqVar => !availableVars.includes(reqVar)));
+                    }
+                }
+            }
             
-            inputGroup.appendChild(input);
+            console.log('Nenhuma fórmula encontrada');
+            console.log('Fórmulas disponíveis para', currentMode + ':', Object.keys(currentFormulas));
+            return null;
         }
-        
-        container.appendChild(inputGroup);
-    });
-}
 
-// Função para definir campo ativo
-function setActiveInput(input, label) {
-    activeInput = input;
-    activeInputName = label;
-    document.getElementById('active-input-name').textContent = activeInputName;
-}
-
-// Função para formatar entrada
-function formatInput(event) {
-    const input = event.target;
-    let value = input.value;
-    
-    // Remove caracteres não numéricos exceto ponto e vírgula
-    value = value.replace(/[^0-9.,-]/g, '');
-    
-    // Substitui vírgula por ponto
-    value = value.replace(',', '.');
-    
-    input.value = value;
-}
-
-// Função para converter taxa efetiva
-function convertEffectiveRate(input) {
-    const value = parseFloat(input.value);
-    if (isNaN(value)) {
-        alert('Por favor, insira um valor válido.');
-        return;
-    }
-    
-    // Converter taxa anual para mensal (exemplo)
-    const monthlyRate = Math.pow(1 + (value / 100), 1/12) - 1;
-    const result = confirm(`Taxa anual: ${value}%\nTaxa mensal equivalente: ${(monthlyRate * 100).toFixed(4)}%\n\nDeseja usar a taxa mensal?`);
-    
-    if (result) {
-        input.value = (monthlyRate * 100).toFixed(4);
-    }
-}
-
-// Função para inserir valor no campo ativo
-function insertValue(value) {
-    if (!activeInput) {
-        alert('Selecione um campo primeiro.');
-        return;
-    }
-    
-    if (value === '=') {
-        calculate();
-        return;
-    }
-    
-    const currentValue = activeInput.value;
-    
-    if (['+', '-', '*', '/', '%'].includes(value)) {
-        // Operadores matemáticos
-        if (currentValue && !isNaN(parseFloat(currentValue))) {
+        function validateInputs() {
+            const setVars = Object.keys(financialValues).filter(key => 
+                financialValues[key] !== null && 
+                financialValues[key] !== undefined &&
+                ['vp', 'vf', 'i', 'n', 'j'].includes(key)
+            );
+            
+            if (setVars.length < 2) {
+                return { valid: false, error: 'PRECISA DE PELO MENOS 2 VALORES' };
+            }
+            else if (setVars.length >= 4) {
+                return { valid: false, error: 'MUITOS VALORES DEFINIDOS (MAX 3)' };
+            }
+             
+            if (financialValues.i !== null && financialValues.i === 0 && currentMode === 'compostos') {
+                return { valid: false, error: 'TAXA NÃO PODE SER ZERO' };
+            }
+            if (financialValues.n !== null && financialValues.n <= 0) {
+                return { valid: false, error: 'PERÍODOS DEVE SER > 0' };
+            }
+            if (financialValues.vp !== null && financialValues.vp === 0 && 
+                (setVars.includes('i') || setVars.includes('n'))) {
+                return { valid: false, error: 'VP NÃO PODE SER ZERO' };
+            }
+            return { valid: true, setVars };
+        }
+ 
+        function findMissingVariable(setVars) {
+            const allVars = ['vp', 'vf', 'i', 'n', 'j'];
+            const missingVars = allVars.filter(v => !setVars.includes(v));
+            if (missingVars.length !== 1) {
+                return { valid: false, error: 'DEIXE APENAS 1 VARIÁVEL VAZIA' };
+            } 
+            return { valid: true, missingVar: missingVars[0] };
+        }
+ 
+        function executeCalculation(formula, missingVar) {
             try {
-                const result = eval(currentValue);
-                activeInput.value = result.toString();
+                const args = formula.from.map(varName => {
+                    const value = financialValues[varName];
+                    if (value === null || value === undefined || isNaN(value)) {
+                        throw new Error(`Valor inválido para ${varName}`);
+                    } return value;
+                });
+                
+                console.log('Executando cálculo com args:', args);
+                const result = formula.calculate(...args);
+                if (!isFinite(result) || isNaN(result)) { throw new Error('Resultado inválido'); }
+                if (result < 0 && ['vp', 'vf', 'n'].includes(missingVar)) {
+                    console.warn('Resultado negativo para variável que deveria ser positiva');
+                }
+                return { success: true, result };
             } catch (error) {
-                activeInput.value = currentValue + value;
+                console.error('Erro no cálculo:', error);
+                return { success: false, error: error.message };
             }
         }
-    } else {
-        // Números e ponto decimal
-        activeInput.value = currentValue + value;
-    }
-}
+ 
+        function displayCalculationResult(missingVar, result, formula) { 
+            financialValues[missingVar] = result;
+            displayValue = formatResult(result, missingVar);
+             
+            const varName = missingVar.toUpperCase();
+            const formattedResult = formatResult(result, missingVar);
+            document.getElementById('display-line').textContent = `${varName} = ${formattedResult}`;
+            
+            updateFormulaDisplay(formula.formula, `${varName} = ${formattedResult}`); 
+            setTimeout(() => {
+                const varElement = document.getElementById(`var-${missingVar}`);
+                if (varElement) { varElement.className = 'variable-item calculated'; }
+            }, 100);
+            
+            isEnteringNumber = false;
+            console.log(`Resultado calculado: ${varName} = ${result}`);
+        }
+        
+        function generateConversionPanel() {
+            const panel = document.getElementById('conversion-panel');
+            const buttons = document.getElementById('conversion-buttons');
+            const title = document.getElementById('conversion-title');
+            
+            if (currentMode === 'simples' || currentMode === 'compostos') {
+                buttons.innerHTML = '';
+                const configs = conversionConfigs[currentMode];
+                
+                title.textContent = currentMode === 'simples' ? 
+                    'Conversão de Taxas (Proporcionais)' : 
+                    'Conversão de Taxas (Equivalentes)';
+                
+                configs.forEach(config => {
+                    const btn = document.createElement('div');
+                    btn.className = 'conv-btn';
+                    btn.textContent = config.text;
+                    btn.onclick = config.action;
+                    buttons.appendChild(btn);
+                });
+                
+                panel.classList.add('active');
+            } else {
+                panel.classList.remove('active');
+            }
+        }
+ 
+        function generateKeypad() {
+            const keypad = document.getElementById('keypad');
+            keypad.innerHTML = '';
+            const config = keyConfigurations[currentMode];
+             
+            config.row1.forEach(keyConfig => {
+                const key = createKey(keyConfig);
+                key.classList.add('financial');
+                keypad.appendChild(key);
+            });
+             
+            commonKeys.forEach(keyConfig => {
+                const key = createKey(keyConfig);
+                if (keyConfig.wide) { key.style.gridColumn = 'span 2';}
+                
+                if (['0','1','2','3','4','5','6','7','8','9'].includes(keyConfig.main)) {
+                    key.classList.add('number');
+                } else if (['+','-','×','÷','=', '√x', '^'].includes(keyConfig.main)) {
+                    key.classList.add('operator');
+                }
+                keypad.appendChild(key);
+            });
+        }
+ 
+        function createKey(keyConfig) {
+            const key = document.createElement('div');
+            key.className = 'key';
+            key.onclick = () => handleKey(keyConfig.key, keyConfig);
+             
+            if (keyConfig.orange) {
+                const orange = document.createElement('div');
+                orange.className = 'key-orange';
+                orange.textContent = keyConfig.orange;
+                key.appendChild(orange);
+            } 
+            if (keyConfig.blue) {
+                const blue = document.createElement('div');
+                blue.className = 'key-blue';
+                blue.textContent = keyConfig.blue;
+                key.appendChild(blue);
+            }
+             
+            const main = document.createElement('div');
+            main.className = 'key-main';
+            main.textContent = keyConfig.main;
+            key.appendChild(main); 
+            return key;
+        }
+ 
+        function updateVariablesDisplay() { 
+            let displayVariables = {};
+            if (currentMode === 'simples' || currentMode === 'compostos') {
+                displayVariables = { vp: 'VP', vf: 'VF', j: 'J', i: 'i', n: 'n' };
+            } else if (currentMode === 'desc-rac') {
+                displayVariables = { vf: 'N', vp: 'A', d: 'Dr', i: 'i', n: 't' };
+            } else if (currentMode === 'desc-com') {
+                displayVariables = { vf: 'N', vp: 'A', d: 'Dc', i: 'i', n: 't' };
+            } 
 
-// Função para limpar campo ativo
-function clearInput() {
-    if (activeInput) {
-        activeInput.value = '';
-    }
-}
+            const variableElements = ['vp', 'vf', 'j', 'i', 'n'];
+            variableElements.forEach(key => {
+                const element = document.getElementById(`var-${key}`);
+                if (displayVariables[key]) {
+                    element.style.display = 'flex';
+                    let value;
+                    
+                    if (currentMode === 'desc-rac' || currentMode === 'desc-com') {
+                        if (key === 'j') { value = financialValues.d; } 
+                        else { value = financialValues[key]; }
+                    } else { value = financialValues[key]; }
+                    
+                    let displayText = displayVariables[key] + ': '; 
+                    if (value !== null) {
+                        if (key === 'i') { displayText += formatNumber(value) + '%'; } 
+                        else { displayText += formatNumber(value); }
+                        element.className = 'variable-item set';
+                    } else {
+                        displayText += '---';
+                        element.className = 'variable-item';
+                    }
+                    element.textContent = displayText;
+                } else { element.style.display = 'none'; }
+            });
+        }
+ 
+        function updateDisplay() {
+            document.getElementById('display-main').textContent = displayValue;
+            const modeNames = {'simples': 'JUROS SIMPLES', 'compostos': 'JUROS COMPOSTOS'};
+            document.getElementById('mode-indicator').textContent = modeNames[currentMode];
+            updateVariablesDisplay();
+        }
+ 
+        function setFunction(func) {
+            document.querySelectorAll('.func-btn').forEach(btn => btn.classList.remove('active'));
+            if (currentFunction === func) { currentFunction = null;
+            } else {
+                currentFunction = func;
+                document.getElementById('func-' + func).classList.add('active');
+            }
+        }
+ 
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            clearAll();
+            generateKeypad();
+            generateConversionPanel();
+            updateDisplay();
+        }
+ 
+        function handleKey(key, keyConfig) {
+            // Executar função orange/blue se ativa
+            if (currentFunction && keyConfig) {
+                if (currentFunction === 'orange' && keyConfig.orange) {
+                    if (keyConfig.orange === 'CONV') {  toggleConversionMode(); } 
+                    else {  executeSpecialFunction(keyConfig.orange); }
+                    
+                    currentFunction = null;
+                    document.querySelectorAll('.func-btn').forEach(btn => btn.classList.remove('active'));
+                    updateDisplay();
+                    return;
+                } else if (currentFunction === 'blue' && keyConfig.blue) {
+                    executeSpecialFunction(keyConfig.blue);
+                    currentFunction = null;
+                    document.querySelectorAll('.func-btn').forEach(btn => btn.classList.remove('active'));
+                    updateDisplay();
+                    return;
+                }
+            }
+ 
+            if (['vp', 'vf', 'i', 'n', 'j', 'd'].includes(key)) {
+                currentFunction = null;
+                document.querySelectorAll('.func-btn').forEach(btn => btn.classList.remove('active'));
+            }
+ 
+            switch(key) {
+                case '0': case '1': case '2': case '3': case '4':
+                case '5': case '6': case '7': case '8': case '9':
+                    enterNumber(key);
+                    break;
+                case '.':
+                    enterDecimal();
+                    break;
+                case '√x':
+                    changeSign();
+                    break;
+                case '^':
+                    clearDisplay();
+                    break;
+                case 'backspace':
+                    backspace();
+                    break;
+                case 'enter':
+                    enterValue();
+                    break;
+                case 'vp':
+                case 'vf':
+                case 'i':
+                case 'n':
+                case 'j':
+                case 'd':
+                    setFinancialValue(key);
+                    break;
+                case 'equals':
+                case '=':
+                    console.log("Tecla pressionada:", key);
+                    calculate();
+                    break;
+                case 'on':
+                    clearAll();
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/': 
+                    break;
+                default: break;
+            }
+            updateDisplay();
+        }
 
-// Função para backspace
-function backspace() {
-    if (activeInput) {
-        activeInput.value = activeInput.value.slice(0, -1);
-    }
-}
+        function toggleConversionMode() {
+            conversionMode = !conversionMode;
+            const panel = document.getElementById('conversion-panel');
+            if (conversionMode) {
+                panel.style.display = 'block';
+                document.getElementById('display-line').textContent = 'MODO CONVERSÃO ATIVO';
+            } else {
+                panel.style.display = 'none';
+                document.getElementById('display-line').textContent = '';
+            }
+        }
 
-// Função para atualizar label do resultado
-function updateResultLabel() {
-    const labels = {
-        'compostos': 'Resultado:',
-        'simples': 'Resultado:',
-        'racional': 'Resultado:',
-        'comercial': 'Resultado:'
-    };
+        function convertRate(multiplier, description) {
+            const value = parseFloat(displayValue);
+            if (isNaN(value)) { showError('DIGITE UMA TAXA'); return; }
+
+            const result = value * multiplier;
+            displayValue = formatNumber(result);
+            document.getElementById('display-line').textContent = 
+                `${description.toUpperCase()}: ${formatNumber(result)}%`;
+            isEnteringNumber = false;
+        }
+
+        function toggleEquivalentRate() {
+            if (!financialValues.i || !financialValues.n) {
+                showError('DEFINA i E n PRIMEIRO');  return;
+            }
+            
+            const monthlyRate = financialValues.i / 100;
+            const periods = financialValues.n;
+            const annualRate = (Math.pow(1 + monthlyRate, 12) - 1) * 100;
+            
+            displayValue = formatNumber(annualRate);
+            document.getElementById('display-line').textContent = 
+                `TAXA EQUIV. ANUAL: ${formatNumber(annualRate)}%`;
+            isEnteringNumber = false;
+        }
+        
+        function nominalToEffective() {
+            const nominalRate = parseFloat(displayValue);
+            if (isNaN(nominalRate)) {  showError('DIGITE TAXA NOMINAL'); return;}
+            const k = 12;
+            const effectiveRate = (Math.pow(1 + nominalRate/100/k, k) - 1) * 100;
     
-    document.getElementById('result-label').textContent = labels[currentType];
-}
+            displayValue = formatNumber(effectiveRate);
+            document.getElementById('display-line').textContent = 
+                `TAXA EFETIVA: ${formatNumber(effectiveRate)}%`;
+            isEnteringNumber = false;
+        }
 
-// Função principal de cálculo
+        function effectiveToNominal() {
+            const effectiveRate = parseFloat(displayValue);
+            if (isNaN(effectiveRate)) { showError('DIGITE TAXA EFETIVA');  return; }
+            
+            const k = 12;
+            const nominalRate = (Math.pow(1 + effectiveRate/100, 1/k) - 1) * k * 100;
+            
+            displayValue = formatNumber(nominalRate);
+            document.getElementById('display-line').textContent = 
+                `TAXA NOMINAL: ${formatNumber(nominalRate)}%`;
+            isEnteringNumber = false;
+        }
+        
+        function proportionalRate() {
+            const value = parseFloat(displayValue);
+            if (isNaN(value)) { showError('DIGITE UMA TAXA'); return;  }
+             
+            const monthlyRate = value / 12;
+            displayValue = formatNumber(monthlyRate);
+            document.getElementById('display-line').textContent = 
+                `TAXA PROPORCIONAL: ${formatNumber(monthlyRate)}%`;
+            isEnteringNumber = false;
+        }
+        
+        function executeSpecialFunction(func) {
+            const value = parseFloat(displayValue);
+            if (isNaN(value)) {  showError('ERRO'); return; }
+
+            let result;
+            switch(func) {
+                case 'x²': result = value * value; break;
+                case '√x':
+                    if (value < 0) {  showError('ERRO: RAIZ DE NEGATIVO'); return;  }
+                    result = Math.sqrt(value); break;
+                case '1/x':
+                    if (value === 0) { showError('ERRO: DIVISÃO POR 0'); return; }
+                    result = 1 / value;  break;
+                case 'yˣ': showError('ENTER BASE, ENTER, EXPOENTE, yˣ'); return;
+                case '%': result = value / 100; break;
+                case 'ABS':  result = Math.abs(value); break;
+                case 'LOG':
+                    if (value <= 0) { showError('ERRO: LOG ≤ 0'); return; }
+                    result = Math.log10(value); break;
+                case 'LN':
+                    if (value <= 0) { showError('ERRO: LN ≤ 0');  return; }
+                    result = Math.log(value); break;
+                case 'SIN': result = Math.sin(value * Math.PI / 180);  break;
+                case 'COS': result = Math.cos(value * Math.PI / 180); break;
+                default: return;
+            }
+
+            if (isFinite(result) && !isNaN(result)) {
+                displayValue = formatNumber(result);
+                isEnteringNumber = false;
+            } else { showError('ERRO NO CÁLCULO'); }
+        }
+ 
+        function enterNumber(num) {
+            if (!isEnteringNumber || displayValue === '0') {
+                displayValue = num;
+                isEnteringNumber = true;
+            } else { displayValue += num; }
+        }
+ 
+        function enterDecimal() {
+            if (!isEnteringNumber) {
+                displayValue = '0.';
+                isEnteringNumber = true;
+            } else if (displayValue.indexOf('.') === -1) { displayValue += '.';}
+        }
+
+        function changeSign() {
+            if (displayValue !== '0') {
+                displayValue = displayValue.startsWith('-') ? 
+                    displayValue.substring(1) : '-' + displayValue;
+            }
+        }
+
+        function clearDisplay() {
+            displayValue = '0';
+            isEnteringNumber = false;
+        }
+
+        function clearAll() {
+            displayValue = '0';
+            isEnteringNumber = false;
+            financialValues = { vp: null, vf: null, i: null, n: null, j: null, d: null };
+            document.getElementById('display-line').textContent = '';
+            updateFormulaDisplay('---', '---');
+            conversionMode = false;
+        }
+
+        function enterValue() { isEnteringNumber = false; }
+
+        function backspace() {
+            if (isEnteringNumber && displayValue.length > 1) {
+                displayValue = displayValue.slice(0, -1);
+            } else {
+                displayValue = '0';
+                isEnteringNumber = false;
+            }
+        }
+
+        function setFinancialValue(variable) {
+            const value = parseFloat(displayValue);
+            if (!isNaN(value)) {
+                let actualVariable = variable;
+                if ((currentMode === 'desc-rac' || currentMode === 'desc-com') && variable === 'j') {
+                    actualVariable = 'd';
+                }
+                
+                financialValues[actualVariable] = value;
+                let variableName = variable.toUpperCase();
+                if (currentMode === 'desc-rac' || currentMode === 'desc-com') {
+                    const nameMap = {
+                        'vf': 'N',
+                        'vp': 'A', 
+                        'j': currentMode === 'desc-rac' ? 'Dr' : 'Dc',
+                        'i': 'i',
+                        'n': 't'
+                    };
+                    variableName = nameMap[variable] || variable.toUpperCase();
+                }
+                
+                let displayText = `${variableName} = `;
+                if (variable === 'i') {  displayText += formatNumber(value) + '%';} 
+                else { displayText += formatNumber(value); }
+                updateFormulaDisplay('---', '---');
+                document.getElementById('display-line').textContent = displayText;
+                displayValue = '0';
+                isEnteringNumber = false;
+            }
+        }
+
+
 function calculate() {
-    // Determinar qual campo está vazio (o que será calculado)
-    const fields = fieldConfigurations[currentType];
-    let emptyField = null;
-    let result = 0;
-    
-    for (const field of fields) {
-        const input = document.getElementById(field.id);
-        if (!input.value.trim()) {
-            emptyField = field.id;
-            break;
-        }
-    }
-    
-    if (!emptyField) {
-        alert('Todos os campos estão preenchidos. Deixe um campo vazio para calcular.');
-        return;
-    }
-    
-    try {
-        switch (currentType) {
-            case 'compostos':
-                result = calculateCompoundInterest(emptyField);
+    console.log('Iniciando cálculo...', financialValues); 
+    try {   
+        const setVars = Object.keys(financialValues).filter(key => 
+            financialValues[key] !== null && 
+            ['vp', 'vf', 'i', 'n', 'j'].includes(key)
+        );
+        console.log('Variáveis definidas:', setVars);
+        if (setVars.length < 2) { showError('PRECISA DE PELO MENOS 2 VALORES');  return; } 
+        
+        const missingVars = ['vp', 'vf', 'i', 'n', 'j'].filter(v => !setVars.includes(v));
+        console.log('Variáveis faltando:', missingVars);
+         
+        let foundFormula = null;
+        let calculableVar = null; 
+        for (const missingVar of missingVars) {
+            const formula = findApplicableFormula(missingVar);
+            if (formula) {
+                foundFormula = formula;
+                calculableVar = missingVar;
                 break;
-            case 'simples':
-                result = calculateSimpleInterest(emptyField);
-                break;
-            case 'racional':
-                result = calculateRationalDiscount(emptyField);
-                break;
-            case 'comercial':
-                result = calculateCommercialDiscount(emptyField);
-                break;
+            }
         }
         
-        // Formatar resultado
-        const formattedResult = formatCurrency(result, emptyField);
-        document.getElementById('result-value').textContent = formattedResult;
-        
-    } catch (error) {
-        alert('Erro no cálculo: ' + error.message);
-        document.getElementById('result-value').textContent = 'Erro';
-    }
-}
-
-// Função para calcular juros compostos  
-function calculateCompoundInterest(emptyField) {
-    const vp = parseFloat(document.getElementById('vp-input')?.value) || 0;
-    const vf = parseFloat(document.getElementById('vf-input')?.value) || 0;
-    const i = parseFloat(document.getElementById('i-input')?.value) || 0;
-    const n = parseFloat(document.getElementById('n-input')?.value) || 0;
-    
-    switch (emptyField) {
-        case 'vf-input':
-            // VF = VP × (1 + i)^n
-            if (vp <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            return vp * Math.pow(1 + (i / 100), n);
-            
-        case 'vp-input':
-            // VP = VF / (1 + i)^n
-            if (vf <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            return vf / Math.pow(1 + (i / 100), n);
-            
-        case 'i-input':
-            // i = (VF/VP)^(1/n) - 1
-            if (vp <= 0 || vf <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            if (vf <= vp) throw new Error('VF deve ser maior que VP');
-            return (Math.pow(vf / vp, 1 / n) - 1) * 100;
-            
-        case 'n-input':
-            // n = ln(VF/VP) / ln(1 + i)
-            if (vp <= 0 || vf <= 0 || i <= 0) throw new Error('Valores devem ser positivos');
-            if (vf <= vp) throw new Error('VF deve ser maior que VP');
-            return Math.log(vf / vp) / Math.log(1 + (i / 100));
-            
-        default:
-            throw new Error('Campo inválido');
-    }
-}
-
-// Função para calcular juros simples  
-function calculateSimpleInterest(emptyField) {
-    const vp = parseFloat(document.getElementById('vp-input')?.value) || 0;
-    const vf = parseFloat(document.getElementById('vf-input')?.value) || 0;
-    const j = parseFloat(document.getElementById('j-input')?.value) || 0;
-    const i = parseFloat(document.getElementById('i-input')?.value) || 0;
-    const n = parseFloat(document.getElementById('n-input')?.value) || 0;
-
-    switch (emptyField) {
-        case 'vf-input':
-            // VF = VP + J
-            if (vp <= 0 || j <= 0) throw new Error('Valores devem ser positivos');
-            return vp + j;
-            
-        case 'vp-input':
-            // VP = VF - J
-            if (vf <= 0 || j <= 0) throw new Error('Valores devem ser positivos');
-            if (vf <= j) throw new Error('VF deve ser maior que J');
-            return vf - j;
-            
-        case 'j-input':
-            // J = VP * i * n
-            if (vp <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            return vp * (i / 100) * n;
-            
-        case 'i-input':
-            // i = J / (VP * n)
-            if (vp <= 0 || j <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            return (j / (vp * n)) * 100;
-            
-        case 'n-input':
-            // n = J / (VP * i)
-            if (vp <= 0 || j <= 0 || i <= 0) throw new Error('Valores devem ser positivos');
-            return j / (vp * (i / 100));
-            
-        default:
-            throw new Error('Campo inválido');
-    }
-}
-
-// Função para converter taxa efetiva (modificada para desconto)
-function convertEffectiveRate(input) {
-    const value = parseFloat(input.value);
-    if (isNaN(value)) {
-        alert('Por favor, insira um valor válido.');
-        return;
-    }
-
-    if (currentType === 'racional' || currentType === 'comercial') {
-        // Para desconto racional e comercial
-        const n = parseFloat(document.getElementById('n-input')?.value) || 1;
-        
-        if (n <= 0) {
-            alert('Por favor, informe o número de períodos primeiro.');
+        if (!foundFormula) {
+            console.log('Nenhuma fórmula encontrada para as variáveis disponíveis:', setVars);
+            showError('COMBINAÇÃO DE VARIÁVEIS NÃO SUPORTADA');
             return;
         }
-
-        if (currentType === 'comercial') {
-            // Converter taxa comercial para efetiva: i_efetiva = i_comercial / (1 - i_comercial * n)
-            if ((value / 100) * n >= 1) {
-                alert('Taxa × período deve ser menor que 100%.');
-                return;
-            }
-            const effectiveRate = (value / 100) / (1 - (value / 100) * n);
-            const result = confirm(`Taxa comercial: ${value}%\nTaxa efetiva equivalente: ${(effectiveRate * 100).toFixed(6)}%\n\nDeseja usar a taxa efetiva?`);
-            
-            if (result) {
-                input.value = (effectiveRate * 100).toFixed(6);
-            }
-        } else {
-            // Converter taxa racional para efetiva: i_efetiva = i_racional
-            // (No desconto racional, a taxa já é efetiva)
-            const result = confirm(`Taxa informada: ${value}%\nNo desconto racional, a taxa já é efetiva.\nDeseja manter a taxa?`);
-            
-            if (!result) {
-                input.value = value.toFixed(6);
-            }
-        }
-    } else {
-        // Para juros compostos (conversão de periodicidade)
-        const monthlyRate = Math.pow(1 + (value / 100), 1/12) - 1;
-        const result = confirm(`Taxa anual: ${value}%\nTaxa mensal equivalente: ${(monthlyRate * 100).toFixed(6)}%\n\nDeseja usar a taxa mensal?`);
         
-        if (result) {
-            input.value = (monthlyRate * 100).toFixed(6);
+        console.log('Variável a ser calculada:', calculableVar);
+        const formula = foundFormula;
+        
+        if (!foundFormula) {
+            console.error('Erro no cálculo:', calcResult.error);
+            showError('ERRO NO CÁLCULO');
+            return;
         }
+         
+        const calcResult = executeCalculation(formula, calculableVar); 
+        if (!calcResult.success) {
+            console.error('Erro no cálculo:', calcResult.error);
+            showError('ERRO NO CÁLCULO');
+            return;
+        }
+        
+        const result = calcResult.result;
+        console.log('Resultado calculado:', result);
+         
+        if (!isFinite(result) || isNaN(result)) {
+            console.error('Resultado inválido:', result);
+            showError('RESULTADO INVÁLIDO');
+            return;
+        } 
+        financialValues[calculableVar] = result;
+        displayValue = formatNumber(result);
+        isEnteringNumber = false; 
+        const varName = calculableVar.toUpperCase();
+        const formattedResult = formatResult(result, calculableVar);
+        
+        document.getElementById('display-main').textContent = displayValue;
+        document.getElementById('display-line').textContent = `${varName} = ${formattedResult}`;
+        
+        updateFormulaDisplay(formula.formula, `${varName} = ${formattedResult}`);
+        updateDisplay();
+        
+        console.log(`${varName} calculado com sucesso usando: ${formula.description}`);
+        
+    } catch (error) {
+        console.error('Erro no cálculo:', error);
+        showError('ERRO NO CÁLCULO');
     }
 }
+ 
+        function updateFormulaDisplay(formula, result) {
+            const formulaElement = document.getElementById('current-formula');
+            const resultElement = document.getElementById('formula-result');
+            
+            if (formulaElement) { formulaElement.textContent = formula; }
+            if (resultElement) { resultElement.textContent = result;}
+        } 
 
-// Função para calcular desconto racional (atualizada para usar taxa efetiva)
-function calculateRationalDiscount(emptyField) {
-    const vp = parseFloat(document.getElementById('vp-input')?.value) || 0;
-    const vf = parseFloat(document.getElementById('vf-input')?.value) || 0;
-    const i = parseFloat(document.getElementById('i-input')?.value) || 0;
-    const n = parseFloat(document.getElementById('n-input')?.value) || 0;
-    
-    // No desconto racional, a taxa já é efetiva
-    const i_efetiva = i / 100;
-    
-    switch (emptyField) {
-        case 'vf-input':
-            if (vp <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            return vp * (1 + i_efetiva * n);
+        function showError(message) {
+            document.getElementById('display-main').textContent = message;
+            document.getElementById('display-main').classList.add('error');
+            setTimeout(() => {
+                document.getElementById('display-main').classList.remove('error');
+                displayValue = '0';
+                updateDisplay();
+            }, 2000);
+        }
+        
+        function formatResult(value, variable) {
+            if (variable === 'i') {  return parseFloat(value.toFixed(4)) + '%';} 
+            else if (variable === 'n') {  return parseFloat(value.toFixed(2));}
+            else { return formatNumber(value);}
+        }
+ 
+        function formatNumber(value) {
+            if (Math.abs(value) >= 1000000) { return value.toExponential(4);  }
+            return parseFloat(value.toFixed(2)).toString();
+        }
+ 
+        generateKeypad();
+        generateConversionPanel();
+        updateDisplay();
+ 
+        document.addEventListener('keydown', function(e) {
+            const keyMap = {
+                '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+                '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+                '.': '.', ',': '.', 
+                'Escape': 'clear',
+                'Backspace': 'backspace',
+                '=': 'equals',
+                '+': '+', '-': '-', '*': '*', '/': '/'
+            };
             
-        case 'vp-input':
-            if (vf <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            return vf / (1 + i_efetiva * n);
-            
-        case 'i-input':
-            if (vp <= 0 || vf <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            if (vf <= vp) throw new Error('N deve ser maior que A');
-            return ((vf - vp) / (vp * n)) * 100;
-            
-        case 'n-input':
-            if (vp <= 0 || vf <= 0 || i <= 0) throw new Error('Valores devem ser positivos');
-            if (vf <= vp) throw new Error('N deve ser maior que A');
-            return (vf - vp) / (vp * i_efetiva);
-            
-        default:
-            throw new Error('Campo inválido');
-    }
-}
-
-// Função para calcular desconto comercial  
-function calculateCommercialDiscount(emptyField) {
-    const vp = parseFloat(document.getElementById('vp-input')?.value) || 0;
-    const vf = parseFloat(document.getElementById('vf-input')?.value) || 0;
-    const i = parseFloat(document.getElementById('i-input')?.value) || 0;
-    const n = parseFloat(document.getElementById('n-input')?.value) || 0;
-    
-    switch (emptyField) {
-        case 'vf-input':
-            // N = A / (1 - i × n)
-            if (vp <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            if ((i / 100) * n >= 1) throw new Error('Taxa × período deve ser menor que 100%');
-            return vp / (1 - (i / 100) * n);
-            
-        case 'vp-input':
-            // A = N × (1 - i × n)
-            if (vf <= 0 || i <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            if ((i / 100) * n >= 1) throw new Error('Taxa × período deve ser menor que 100%');
-            return vf * (1 - (i / 100) * n);
-            
-        case 'i-input':
-            // i = (N - A) / (N × n)
-            if (vp <= 0 || vf <= 0 || n <= 0) throw new Error('Valores devem ser positivos');
-            if (vf <= vp) throw new Error('N deve ser maior que A');
-            return ((vf - vp) / (vf * n)) * 100;
-            
-        case 'n-input':
-            // n = (N - A) / (N × i)
-            if (vp <= 0 || vf <= 0 || i <= 0) throw new Error('Valores devem ser positivos');
-            if (vf <= vp) throw new Error('N deve ser maior que A');
-            return (vf - vp) / (vf * (i / 100));
-            
-        default:
-            throw new Error('Campo inválido');
-    }
-}
-
-// Função para formatar resultado  
-function formatCurrency(value, fieldId) {
-    if (isNaN(value) || !isFinite(value)) return '0,00';
-    
-    // Para taxas (i-input)
-    if (fieldId === 'i-input') {
-        return parseFloat(value.toFixed(6)) + '%';
-    }
-    
-    // Para períodos (n-input)
-    if (fieldId === 'n-input') {
-        return parseFloat(value.toFixed(4)) + ' períodos';
-    }
-    
-    // Para valores monetários
-    return 'R$ ' + parseFloat(value.toFixed(2)).toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-}
-
-// Função para limpar todos os campos
-function clearAll() {
-    document.querySelectorAll('.input-field').forEach(input => {
-        input.value = '';
-    });
-    document.getElementById('result-value').textContent = '0,00';
-    activeInput = null;
-    activeInputName = 'Nenhum campo selecionado';
-    document.getElementById('active-input-name').textContent = activeInputName;
-}
-
-// Inicialização
-document.addEventListener('DOMContentLoaded', function() {
-    generateInputFields();
-    updateResultLabel();
-});
-</script>
+            if (keyMap[e.key]) {
+                handleKey(keyMap[e.key]);
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
